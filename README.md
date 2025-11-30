@@ -1,1 +1,1 @@
-# odin-exercise
+doing odin project to refresh my spirituality
