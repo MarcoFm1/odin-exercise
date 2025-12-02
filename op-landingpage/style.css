@@ -55,7 +55,7 @@ body{
 }
 
 .div-hero{
-    width: 30%;
+    width: 33%;
     color: #F9FAF8;
     
 }
@@ -74,7 +74,7 @@ body{
     background-color: #646e73;
     color: white;
     width: 40%;
-    height: 200px;
+    height: 300px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -90,4 +90,38 @@ body{
     padding-left: 25px;
     padding-right:25px;
     border-radius: 7px;
+}
+
+.section-information{
+    padding-bottom: 100px;
+}
+
+.section-information h2{
+    font-size: 36px;
+    color: #1F2937;
+    font-weight: 900;
+    text-align: center;
+}
+
+.div-cont-squares{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+}
+
+.div-content-square{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    width: 150px;
+    height: 250px;
+}
+
+.div-square{
+    width: 100%;
+    height: 100%;
+    border: 4px solid #3882F6;
+    border-radius: 15px;
+
 }
