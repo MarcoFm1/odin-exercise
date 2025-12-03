@@ -52,27 +52,27 @@ function Round(){
     cpuTag.innerHTML = "CPU: " + cpuChoice
     if (choice == cpuChoice){
         console.log("Tie");
+        initialRound += 0;
+        console.log(initialRound);
     }
     else if ((choice == "Rock" && cpuChoice == "Scissors") || (choice == "Paper" && cpuChoice == "Rock") || (choice == "Scissors" && cpuChoice == "Paper")){
         console.log("Win");
         points += 1;
+        initialRound += 1;
+        console.log(initialRound);
     }
     else{
         console.log("Lose");
+        initialRound += 1;
+        console.log(initialRound);
     }
 
-    
+    CheckCondition();
 }
 
 function CheckCondition(){
-    if(initialRound < rounds){
-        initialRound += 1 ;
-        console.log("Round: " + initialRound);
-    }
-
     if (initialRound >= rounds) {
         alert("Juego terminado");
         initialRound = 0 ;
     }
-
 }
