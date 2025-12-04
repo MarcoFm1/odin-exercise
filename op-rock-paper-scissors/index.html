@@ -9,12 +9,16 @@
 <body>
     <div class="div-main">
         <div class="div-names">
-            <h1 id="player-tag">Player</h1>
-            <h1 class="hand">✊</h1>
-            <h1 id="cpu-tag">CPU</h1>
-            <h1 class="hand">✊</h1>
-            <h2 id="points-tag">P = 0</h2>
+            <div class="div-cont-hand">
+                <h1>Player</h1>
+                <h1 class="hand player-hand" id="player-tag">✊</h1>
+            </div>
+            <div class="div-cont-hand">
+                <h1>CPU</h1>
+                <h1 class="hand cpu-hand" id="cpu-tag">✊</h1>
+            </div>
         </div>
+        <h2 id="points-tag">P = 0</h2>
 
         <div class="div-container-buttons">
             <button id="rock-btn" onclick="RockChoice(); Round(); CheckCondition()">Rock</button>

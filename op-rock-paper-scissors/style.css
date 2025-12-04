@@ -2,3 +2,38 @@
     background-color: rgb(151, 114, 72);
     color: white;
 }
+
+.div-main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.div-names{
+    width: 40%;
+    border: 5px solid rgb(114, 84, 50);
+    border-radius: 70px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 40px;
+    padding: 50px;
+}
+
+.div-cont-hand{
+    margin: 40px;
+}
+
+.hand {
+    font-size: 80px;
+    display: inline-block;
+}
+
+.player-hand {
+    transform: rotate(90deg) scaleX(-1);
+}
+
+.cpu-hand {
+    transform: rotate(-90deg);
+}
