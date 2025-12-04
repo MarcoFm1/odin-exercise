@@ -10,7 +10,9 @@
     <div class="div-main">
         <div class="div-names">
             <h1 id="player-tag">Player</h1>
+            <h1 class="hand">✊</h1>
             <h1 id="cpu-tag">CPU</h1>
+            <h1 class="hand">✊</h1>
             <h2 id="points-tag">P = 0</h2>
         </div>
 
@@ -19,6 +21,9 @@
             <button id="paper-btn" onclick="PaperChoice(); Round(); CheckCondition()">Paper</button>
             <button id="scissors-btn" onclick="ScissorsChoice(); Round(); CheckCondition()">Scissors</button>
         </div>
+
+        <h3 id="condition-tag"></h3>
+        <h1 id="finalcondition-tag">Final: </h1>
     </div>
     <script src="script.js"></script>
 </body>
