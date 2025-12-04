@@ -3,86 +3,89 @@ let cpuTag = document.getElementById("cpu-tag");
 let pointTag = document.getElementById("points-tag");
 let conditionTag = document.getElementById("condition-tag");
 let finalConditionTag = document.getElementById("finalcondition-tag");
-
-
+let roundTag = document.getElementById("round-tag");
 
 let choice = "";
-
 let points = 0;
-
 let initialRound = 0;
-//let rounds = prompt("Rounds: ");
+
+let rounds = prompt("Rounds: ");
 while(isNaN(rounds) || rounds == '' || rounds > 10){
     alert("Only numbers and rounds <= 10")
     rounds = prompt("Rounds: ")
 }
-console.log(rounds)
+roundTag.innerHTML = "Round: " + initialRound + "/" + rounds;
 
-
-function RockChoice(){
-    choice = "🗿";
-    playerTag.innerHTML = "🗿";
-    console.log(choice);
-    conditionTag.innerHTML = "";
-    finalConditionTag.innerHTML = "";
-
-}
-
-function PaperChoice(){
-    choice = "📄";
-    playerTag.innerHTML = "📄";
-    console.log(choice);
-    conditionTag.innerHTML = "";
-    finalConditionTag.innerHTML = "";
-
-}
-
-function ScissorsChoice(){
-    choice = "✂️";
-    playerTag.innerHTML = "✂️";
-    console.log(choice);
-    conditionTag.innerHTML = "";
-    finalConditionTag.innerHTML = "";
-
-}
 
 function CpuChoice(){
     let opc = ["🗿","📄","✂️"];
     let random = Math.floor(Math.random() * opc.length);
-    console.log(opc[random]);
     return opc[random];
 }
 
+function playWithAnimation(playerEmoji){
+    conditionTag.innerHTML = "";
+    finalConditionTag.innerHTML = "";
 
-function Round(){
-    let cpuChoice = CpuChoice();
-    cpuTag.innerHTML = cpuChoice
+    // choices
+    choice = playerEmoji;
+    const cpuRealChoice = CpuChoice();
+
+    // estado default
+    playerTag.innerHTML = "✊";
+    cpuTag.innerHTML = "✊";
+
+    playerTag.classList.add("hand-anim");
+    cpuTag.classList.add("hand-anim");
+
+    // 3 rebotes * 0.4s = 1200ms - 100ms para que quede mas prolijo
+    setTimeout(() => {
+        playerTag.classList.remove("hand-anim");
+        cpuTag.classList.remove("hand-anim");
+
+        playerTag.innerHTML = choice;
+        cpuTag.innerHTML = cpuRealChoice;
+
+        // Ejecutar ronda con la jugada real del CPU
+        RoundWith(cpuRealChoice);
+
+    }, 1100);
+}
+
+function RockChoice(){ 
+    playWithAnimation("🗿"); 
+}
+
+function PaperChoice(){ 
+    playWithAnimation("📄"); 
+}
+
+function ScissorsChoice(){ 
+    playWithAnimation("✂️"); 
+}
+
+
+function RoundWith(cpuChoice){
     if (choice == cpuChoice){
-        console.log("Tie");
-        conditionTag.innerHTML = "Tie"
-        initialRound += 0;
-        console.log(initialRound);
+        conditionTag.innerHTML = "Tie";
     }
-    else if ((choice == "🗿" && cpuChoice == "✂️") || (choice == "📄" && cpuChoice == "🗿") || (choice == "✂️" && cpuChoice == "📄")){
-        console.log("Win");
-        conditionTag.innerHTML = "Win"
-        points += 1;
-        initialRound += 1;
-        console.log(initialRound);
-        
+    else if ((choice == "🗿" && cpuChoice == "✂️") ||(choice == "📄" && cpuChoice == "🗿") ||(choice == "✂️" && cpuChoice == "📄")){
+        conditionTag.innerHTML = "Win";
+        points++;
+        initialRound++;
     }
     else{
-        console.log("Lose");
-        conditionTag.innerHTML = "Lose"
-        initialRound += 1;
-        console.log(initialRound);
+        conditionTag.innerHTML = "Lose";
+        initialRound++;
     }
-    
+
+    roundTag.innerHTML = `Round: ${initialRound}/${rounds}`;
     CheckCondition();
 }
 
+
 function CheckCondition(){
-    pointTag.innerHTML = "P = " + points
+    pointTag.innerHTML = "P = " + points;
 
     if (OptimizedMatch()) return;
 
@@ -90,46 +93,42 @@ function CheckCondition(){
         CheckWinner();
         pointTag.innerHTML = "P = 0";
         points = 0;
-        initialRound = 0 ;
+        initialRound = 0;
     }
-    
 }
 
 function CheckWinner(){
     if(points > (rounds / 2)){
-        finalConditionTag.innerHTML = "You Win!"
+        finalConditionTag.innerHTML = "You Win!";
     }
     else if(points === (rounds / 2)){
-        finalConditionTag.innerHTML = "Tie!"
+        finalConditionTag.innerHTML = "Tie!";
     }
     else{
-        finalConditionTag.innerHTML = "You Lose!"
+        finalConditionTag.innerHTML = "You Lose!";
     }
 }
 
-
 function OptimizedMatch(){
-    // calcula los puntos que vas y los que quedan para asi terminarla antes. Ej: 3 rounds => ganas 2, la ultima se descarta porque no tiene chance
     let cpuPoints = initialRound - points;
     let roundsLeft = rounds - initialRound;
 
-    // ganas automaticamente 
     if(points > cpuPoints + roundsLeft){
         finalConditionTag.innerHTML = "You Automatically Win!";
-        pointTag.innerHTML = "P = 0";
-        points = 0;
-        initialRound = 0;
+        resetPoints();
         return true;
     }
 
-    // cpu gana automaticamente
     if (cpuPoints > points + roundsLeft){
         finalConditionTag.innerHTML = "You Automatically Lose!";
-        pointTag.innerHTML = "P = 0";
-        points = 0;
-        initialRound = 0;
+        resetPoints();
         return true;
     }
     return false;
 }
 
+function resetPoints(){
+    pointTag.innerHTML = "P = 0";
+    points = 0;
+    initialRound = 0;
+}
