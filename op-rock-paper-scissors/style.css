@@ -129,7 +129,7 @@ button:active{
 .div-footer a.insta{
     background: linear-gradient(90deg, #e7c9a7 0%, #ff7a7a 50%, #ffbb00 100%);
     -webkit-background-clip: text;
-    color: transparent !important; /* clave para evitar blanco */
+    color: transparent !important; 
     opacity: 0.7;
     transition: opacity 0.4s ease;
 }
