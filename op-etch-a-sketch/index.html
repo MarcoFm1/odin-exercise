@@ -1,12 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Etch a Sketch | Odin Project</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+
+    <div class="div-container">
+        <div>
+            <p id="mode-txt">Mode : HOVER</p>
+        </div>
+        <div id="grid-container"></div>
+        <div class="div-btn-container">
+            <button onclick="modifyGrid()">MODIFY GRID</button>
+            <button onclick="modeClick()" id="btn-click">MODE CLICK</button>
+            <button onclick="modeRandom()" id="btn-random">MODE RANDOM</button>
+            <button onclick="reset()">RESET</button>
+        </div>
+        <div class="div-click-conf">
+            <button id="eraser-btn" onclick="eraser()">ERASER 🚫</button>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
+
 </html>
