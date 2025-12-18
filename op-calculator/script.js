@@ -36,7 +36,11 @@ function printNumber(num){
 }
 
 function plusFunction(){
-
+    let num1 = currentNumber;
+    let num2 = printNumber();
+    if(num1) {
+        
+    }
 }
 
 function restFunction(){
