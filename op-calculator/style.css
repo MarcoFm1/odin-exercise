@@ -38,11 +38,24 @@ body{
 }
 
 .div-screen .display-input::placeholder{
-    color: white;
+    color: rgb(202, 202, 202);
+}
+
+.div-screen.active .display-input{
+    font-size: 15px;
+    color: rgb(109, 109, 109);
+    transform: translateY(-65%);
+    transition: .5s;
+}
+
+.div-screen.active .display-result{
+    font-size: 35px;
+    transform: translateY(0);
+    transition: .5s;
 }
 
 .div-screen .display-result{
-    position: absolute;
+    position: absolute; 
     left: 0;
     font-size: 15px;
     transform: translateY(65%);
