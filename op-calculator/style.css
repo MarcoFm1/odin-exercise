@@ -28,7 +28,7 @@ body{
 
 .div-screen input {
     width: 100%;
-    width: 50px;
+    height: 50px;
     background-color: transparent;
     border: none;
     font-size: 35px;
