@@ -14,16 +14,23 @@ function calculate(btnValue) {
     const isLastCharOperation = operators.includes(lastChar);
     const withoutLastChar = input.slice(0, -1);
     const isInvalidResult = ["Error", "Infinity"].includes(result)
-
+    const secondToLastChar = input.slice(-2, -1)
+    let { openBracketsCount, closeBracketsCount } = countBrackets(input);
 
     //cambiar al apretar igual
     if (btnValue === "=") {
         if (input === "" || lastChar === "." || lastChar === "(" || isLastCharOperation && lastChar !== "%" || lastCalculation) {
             return
         }
+
+        while (openBracketsCount > closeBracketsCount) {
+            input += ")";
+            closeBracketsCount++;
+        }
+
         const formattedInput = replaceOperators(input);
         try {
-            const calculatedValue = eval(formattedInput);
+            const calculatedValue = input.includes("%") ? calculatePercentage(input) : eval(formattedInput);
             result = parseFloat(calculatedValue.toFixed(6).toString());
         }
         catch {
@@ -49,25 +56,85 @@ function calculate(btnValue) {
         if (lastCalculation) {
             resetCalculator(result + btnValue);
         }
-        else if ((input === "" || lastChar === "(") && btnValue !== "-" || input === "-" || lastChar === "." || secondToLastChar === "(" && lastChar === "-" || lastChar === "%" && btnValue === "%") {
+        else if ((input === "" || lastChar === "(") && btnValue !== "-" || input === "-" || lastChar === "." || secondToLastChar === "(" && lastChar === "-" || (secondToLastChar === "%" || lastChar === "%") && btnValue === "%") {
             return
         }
-        else if(lastChar==="%"){
+        else if (lastChar === "%") {
             input += btnValue;
         }
-        else if(isLastCharOperation){
+        else if (isLastCharOperation) {
             input = withoutLastChar + btnValue;
         }
         else {
             input += btnValue
         }
     }
+    //controlar decimales
+    else if (btnValue === ".") {
+        const decimalValue = "0.";
+        if (lastCalculation) {
+            resetCalculator(decimalValue);
+        }
+        else if (lastChar === ")" || lastChar === "%") {
+            input += "x" + decimalValue;
+        }
+        else if (input === "" || isLastCharOperator || lastChar === "(") {
+            input += decimalValue;
+        }
+        else {
+            let lastOperatorIndex = -1;
+            for (const operator of operators) {
+                const index = input.lastIndexOf(operator);
+                if (index > lastOperatorIndex) {
+                    lastOperatorIndex = index;
+                }
+            }
+
+            if (!input.slice(lastOperatorIndex + 1).includes(".")) {
+                input += btnValue
+            }
+            input += btnValue;
+
+        }
+    }
+
+    //controlador de parentesis
+    else if (btnValue === "( )") {
+        if (lastCalculation) {
+            if (isInvalidResult) {
+                resetCalculator("(")
+            }
+            else resetCalculator(result + "x(");
+        }
+        else if (lastChar === "(" || lastChar === ".") {
+            return
+        }
+        else if (input === "" || isLastCharOperation && lastChar !== "%") {
+            input += "("
+        }
+        else if (openBracketsCount > closeBracketsCount) {
+            input += ")"
+        }
+        else {
+            input += "x(";
+        }
+    }
+
     else {
         if (lastCalculation) {
             if (isInvalidResult) {
                 return
             }
             resetCalculator(btnValue)
+        }
+        else if (input === "0") {
+            input = btnValue
+        }
+        else if ((operators.includes(secondToLastChar) || secondToLastChar === "(") && lastChar === "0") {
+            input = withoutLastChar + btnValue
+        }
+        else if (lastChar === ")" || lastChar === "%") {
+            input += "x" + btnValue
         }
         else {
             input += btnValue
@@ -93,4 +160,93 @@ function resetCalculator(newInput) {
     result = "";
     lastCalculation = false;
     displayBox.classList.remove("active")
+}
+
+function calculatePercentage(input) {
+    let processedInput = "";
+    let numberBuffer = "";
+    const bracketsState = [];
+    for (let i = 0; i < input.length; i++) {
+        const char = input[i];
+        if (!isNaN(char) || char === ".") {
+            numberBuffer = numberBuffer + char;
+
+        } else if (char === "%") {
+
+            const percentValue = parseFloat(numberBuffer) / 100;
+
+            let prevOperator = "";
+            if (i > 0) {
+                prevOperator = input[i - numberBuffer.length - 1];
+            }
+
+            let nextOperator = "";
+            if (i + 1 < input.length && operators.includes(input[i + 1])) {
+                nextOperator = input[i + 1];
+            }
+
+            if (
+                prevOperator === "" ||
+                prevOperator === "*" ||
+                prevOperator === "("
+            ) {
+                processedInput = processedInput + percentValue;
+
+            } else if (
+                prevOperator === "-" ||
+                prevOperator === "+"
+            ) {
+
+                if (
+                    nextOperator === "+" ||
+                    nextOperator === "-"
+                ) {
+                    processedInput = processedInput + percentValue;
+
+                } else {
+                    processedInput =
+                        "(" +
+                        processedInput.slice(0, -1) +
+                        ")*" +
+                        percentValue;
+                }
+            }
+
+            numberBuffer = "";
+        }
+        else if (operators.includes(char) || char === "(" || char === ")") {
+            if (numberBuffer) {
+                processedInput += numberBuffer;
+                numberBuffer = "";
+            }
+            if (operators.includes(char)) processedInput += char;
+            else if (char === "(") {
+                processedInput += "(";
+                bracketsState.push(processedInput);
+                processedInput = "";
+            }
+            else {
+                processedInput += ")";
+                processedInput = bracketsState.pop() + processedInput;
+            }
+        }
+    }
+    if(numberBuffer){
+        processedInput += numberBuffer
+    }
+    return eval(replaceOperators(processedInput));
+}
+
+function countBrackets(input) {
+    let openBracketsCount = 0;
+    let closeBracketsCount = 0;
+    for (const char of input) {
+        if (char === "(") {
+            openBracketsCount++
+        }
+        else if (char === ")") {
+            closeBracketsCount++
+        }
+    }
+    return { openBracketsCount, closeBracketsCount }
 }
