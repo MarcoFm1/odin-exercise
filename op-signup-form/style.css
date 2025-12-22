@@ -97,6 +97,7 @@ button {
   margin: 30px;
   font-weight: bold;
   border-radius: 6px;
+  cursor: pointer;
 }
 
 .p-already {
