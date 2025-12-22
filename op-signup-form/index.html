@@ -1,21 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up Form | The Odin Project</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div class="div-main">
-        <div>
 
+<body>
+        <div class="div-img-part">
+            <img src="./src/photo-1585202900225-6d3ac20a6962.avif" alt="">
         </div>
-        <div>
-            <form action="">
-                <input type="text">
-            </form>
+        <div class="div-text-part">
+            <div>
+                <p>This is not a real online service! You know you need something like this in your life to help you
+                    realize your deepest dreams. Sign up now to get started.</p>
+                <p>You know you want to.</p>
+            </div>
+            <div class="div-form">
+                <p class="title">Let's do this!</p>
+                <form class="form-grid">
+                    <div class="field">
+                        <label>FIRST NAME</label>
+                        <input type="text" placeholder="">
+                    </div>
+
+                    <div class="field">
+                        <label>LAST NAME</label>
+                        <input type="text" placeholder="">
+                    </div>
+
+                    <div class="field">
+                        <label>EMAIL</label>
+                        <input type="email">
+                    </div>
+
+                    <div class="field">
+                        <label>PHONE NUMBER</label>
+                        <input type="tel">
+                    </div>
+
+                    <div class="field error">
+                        <label>PASSWORD</label>
+                        <input type="password">
+                    </div>
+
+                    <div class="field error">
+                        <label>CONFIRM PASSWORD</label>
+                        <input type="password">
+                    </div>
+                </form>
+            </div>
+            <button>Create Account</button>
+            <p class="p-already">Already have an account? <a href="#">Log in</a></p>
         </div>
-    </div>
 </body>
+
 </html>
