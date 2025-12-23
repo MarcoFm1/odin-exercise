@@ -1,0 +1,29 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.div-main {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    grid-template-rows: 80px 1fr;
+    height: 100vh;
+}
+
+.div-nav {
+    grid-row: 1 / 3;
+    background-color: red;
+}
+
+.div-header {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    background-color: yellow;
+}
+
+.div-screen {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    background-color: hotpink;
+}
