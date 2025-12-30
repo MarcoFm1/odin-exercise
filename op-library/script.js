@@ -1,9 +1,101 @@
+const dialog = document.querySelector("dialog");
+const showButton = document.getElementById("btn-add");
+
+const btnConfirm = document.getElementById("btn-confirm");
+const form = dialog.querySelector("form");
+const btnCancel = document.getElementById("btn-cancel");
+
+const selectEl = document.querySelector("select");
+const inputBookName = document.querySelector("#inputBookName");
+const inputAuthorName = document.querySelector("#inputAuthorName");
+const inputPages = document.querySelector("#inputPages");
+
+const libraryCont = document.getElementById("div-library")
+
+// "Show the dialog" button opens the dialog modally
+showButton.addEventListener("click", () => {
+  dialog.showModal();
+});
+
+// "Close" button closes the dialog
+btnCancel.addEventListener("click", () => {
+  dialog.close();
+});
+
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  
+  addBookToLibrary();
+  clearForm()
+
+  dialog.close(selectEl.value);
+});
+
+
 const myLibrary = [];
 
-function Book() {
-  // the constructor...
+//book constructor
+function Book(title, author, pages, status) {
+  this.title = title;
+  this.author = author;
+  this.pages = pages;
+  this.status = status;
 }
 
 function addBookToLibrary() {
-  // take params, create a book then store it in the array
+  const title = inputBookName.value
+  const author = inputAuthorName.value
+  const pages = inputPages.value
+  const status = selectEl.value
+
+  const newBook = new Book(title, author, pages, status);
+  myLibrary.push(newBook);
+  console.log(myLibrary);
+
+  renderLibrary()
 }
+
+function clearForm() {
+  inputBookName.value = "";
+  inputAuthorName.value = "";
+  inputPages.value = "";
+}
+
+
+function renderLibrary() {
+  libraryCont.innerHTML = "";
+
+  myLibrary.forEach((book, index) => {
+    const card = document.createElement("div");
+    card.classList.add("card");
+
+    card.innerHTML = `
+      <h3>${book.title}</h3>
+      <p><strong>Autor:</strong> ${book.author}</p>
+      <p><strong>Páginas:</strong> ${book.pages}</p>
+      <p><strong>Estado:</strong> ${book.status}</p>
+      <button data-index="${index}">Eliminar</button>
+    `;
+
+    libraryCont.appendChild(card);
+  });
+
+  addDeleteEvents();
+}
+
+
+//button delete
+function addDeleteEvents() {
+  const deleteButtons = document.querySelectorAll(".card button");
+
+  deleteButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      const index = button.dataset.index;
+      myLibrary.splice(index, 1);
+      renderLibrary();
+    });
+  });
+}
+
+
+//ver localstorage

@@ -28,10 +28,30 @@
         </div>
 
         <div class="div-dashboard">
-            <h1>Add your books!</h1>
-            <button class="btn-add">+</button>
+            <button class="btn-add" id="btn-add">
+                <h1>Add your books!</h1>
+            </button>
+            <dialog>
+                <form action="#" method="dialog">
+                    <label for="">Book name</label>
+                    <input type="text" placeholder="'Emma Myers & Me'" id="inputBookName">
+                    <label for="">Author name</label>
+                    <input type="text" placeholder="'My dreams'" id="inputAuthorName">
+                    <label for="">Pages</label>
+                    <input type="number" placeholder="'300'" id="inputPages">
+                    <label for="">Did you finished the book?</label>
+                    <select>
+                        <option>Yes</option>
+                        <option>No</option>
+                    </select>
+                    <div class="div-cont-btn">
+                        <button id="btn-confirm" value="default">Confirm</button>
+                        <button id="btn-cancel" value="default">Cancel</button>
+                    </div>
+                </form>
+            </dialog>
             <div class="div-container">
-
+                <div id="div-library"></div>
             </div>
         </div>
         <div class="div-footer">
