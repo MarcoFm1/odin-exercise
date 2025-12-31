@@ -19,6 +19,7 @@ showButton.addEventListener("click", () => {
 
 // "Close" button closes the dialog
 btnCancel.addEventListener("click", () => {
+  clearForm()
   dialog.close();
 });
 
@@ -69,12 +70,23 @@ function renderLibrary() {
     const card = document.createElement("div");
     card.classList.add("card");
 
+    if(book.title === ""){
+      book.title = "(empty)"
+    }
+    if(book.author === ""){
+      book.author = "-"
+    }
+    if(book.pages === ""){
+      book.pages = 0
+    }
+
     card.innerHTML = `
-      <h3>${book.title}</h3>
-      <p><strong>Autor:</strong> ${book.author}</p>
-      <p><strong>Páginas:</strong> ${book.pages}</p>
-      <p><strong>Estado:</strong> ${book.status}</p>
-      <button data-index="${index}">Eliminar</button>
+      <h3 style="color:white">${book.title}</h3>
+      <p><strong>by:</strong> ${book.author}</p>
+      <p class="txt-pages"><strong>Pages:</strong> ${book.pages}</p>
+      <p class="txt-read"><strong>Read?:</strong> ${book.status}</p>
+      <button data-index="${index}" class="btn-edit-card">Edit</button>
+      <button data-index="${index}" class="btn-delate-card">Delete</button>
     `;
 
     libraryCont.appendChild(card);
@@ -86,7 +98,7 @@ function renderLibrary() {
 
 //button delete
 function addDeleteEvents() {
-  const deleteButtons = document.querySelectorAll(".card button");
+  const deleteButtons = document.querySelectorAll(".card .btn-delate-card");
 
   deleteButtons.forEach(button => {
     button.addEventListener("click", () => {
@@ -96,6 +108,15 @@ function addDeleteEvents() {
     });
   });
 }
+
+
+//edit function
+function addEditEvents(){
+
+}
+
+
+
 
 
 //ver localstorage

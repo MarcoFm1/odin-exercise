@@ -39,14 +39,16 @@
                     <input type="text" placeholder="'My dreams'" id="inputAuthorName">
                     <label for="">Pages</label>
                     <input type="number" placeholder="'300'" id="inputPages">
+                    <label for="">Insert image?</label>
+                    <input type="file" accept="image/*" id="inputImage">
                     <label for="">Did you finished the book?</label>
                     <select>
                         <option>Yes</option>
                         <option>No</option>
                     </select>
                     <div class="div-cont-btn">
-                        <button id="btn-confirm" value="default">Confirm</button>
-                        <button id="btn-cancel" value="default">Cancel</button>
+                        <button id="btn-confirm">Confirm</button>
+                        <button id="btn-cancel" type="button">Cancel</button> <!-- el tipo button evita el submit del form -->
                     </div>
                 </form>
             </dialog>
