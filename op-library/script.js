@@ -13,8 +13,32 @@ const inputPages = document.querySelector("#inputPages");
 const libraryCont = document.getElementById("div-library")
 
 //darkmode
+let darkmode = localStorage.getItem("dark");
+const btnModeChange = document.querySelector(".btn-modechange")
 
+function enableDarkMode(){
+  document.body.classList.add("dark")
+  localStorage.setItem("dark", "active")
+}
 
+function disableDarkMode(){
+  document.body.classList.remove("dark")
+  localStorage.setItem("dark", null)
+}
+
+if(darkmode === "active"){
+  enableDarkMode()
+}
+
+btnModeChange.addEventListener("click", () =>{
+    darkmode = localStorage.getItem("dark")
+    if(darkmode !== "active"){
+      enableDarkMode();
+    }
+    else{
+      disableDarkMode();
+    }
+})
 //==============
 
 
