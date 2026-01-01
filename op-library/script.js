@@ -12,6 +12,12 @@ const inputPages = document.querySelector("#inputPages");
 
 const libraryCont = document.getElementById("div-library")
 
+//darkmode
+
+
+//==============
+
+
 // "Show the dialog" button opens the dialog modally
 showButton.addEventListener("click", () => {
   dialog.showModal();

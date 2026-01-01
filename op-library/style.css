@@ -1,3 +1,41 @@
+:root {
+    --base-color: #ffffff;
+    --base-variant: #b19a9a;
+    --text-color: #000000;
+    --secondary-text: #ffffff;
+    --primary-color: rgb(100, 43, 100);
+    --acent-color: #6c63ff;
+
+    --success-color: rgb(0, 180, 0);
+    --danger-color: rgb(180, 0, 0);
+    --info-color: rgb(0, 98, 190);
+
+    --border-color: #000000;
+    --border-muted: #ccc;
+    --footer-bg: rgb(37, 37, 37);
+    --shadow-color: rgba(0, 0, 0, 0.15);
+    --overlay-color: rgba(0, 0, 0, 0.4);
+}
+
+.dark {
+    --base-color: #121212;
+    --base-variant: #1e1e1e;
+    --text-color: #f1f1f1;
+    --secondary-text: #bdbdbd;
+    --primary-color: #8e4b8e;
+    --acent-color: #8a85ff;
+
+    --success-color: #2ecc71;
+    --danger-color: #e74c3c;
+    --info-color: #3498db;
+
+    --border-color: #888;
+    --border-muted: #444;
+    --footer-bg: #0f0f0f;
+    --shadow-color: rgba(0, 0, 0, 0.6);
+    --overlay-color: rgba(0, 0, 0, 0.6);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -14,26 +52,27 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    background-color: var(--base-color);
 }
 
 .div-header {
-    background-color: rgba(100, 43, 100, 0.377);
     display: flex;
     flex-direction: row;
-    color: white;
     justify-content: space-around;
     padding: 20px;
     width: 50%;
     margin: 0 auto;
     border-radius: 50px;
     margin-top: 20px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    background-color: color-mix(in srgb, var(--primary-color) 38%, transparent);
+    color: var(--secondary-text);
+    box-shadow: 0 6px 20px var(--shadow-color);
 
 }
 
 button {
     background: none;
-    color: white;
+    color: var(--secondary-text);
     border: none;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
@@ -46,7 +85,7 @@ button:hover {
 }
 
 .btn-add {
-    color: black;
+    color: var(--text-color);
     padding: 20px;
     width: fit-content;
     font-weight: bold;
@@ -57,7 +96,7 @@ button:hover {
 
 .btn-add:hover {
     transform: scale(1.1);
-    border: 2px dotted black;
+    border: 2px dotted var(--border-color);
 }
 
 
@@ -72,8 +111,8 @@ button:hover {
 
 .div-footer {
     text-align: center;
-    color: white;
-    background-color: rgb(37, 37, 37);
+    background-color: var(--footer-bg);
+    color: var(--secondary-text);
     padding: 30px;
 }
 
@@ -82,6 +121,7 @@ button:hover {
 ::backdrop {
     backdrop-filter: blur(8px);
     animation: backdropIn 0.35s ease forwards;
+    background-color: var(--overlay-color);
 
 }
 
@@ -90,14 +130,12 @@ dialog {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border: 4px solid rgb(82, 82, 82);
+    border: 4px solid var(--border-muted);
+    background: var(--base-color);
     border-radius: 16px;
     padding: 24px;
-    background: white;
     opacity: 0;
     animation: dialogIn 0.35s ease forwards;
-
-
 }
 
 dialog[open] {
@@ -117,18 +155,22 @@ label {
 
 input {
     padding: 10px;
-    border: 1px solid black;
     border-radius: 20px;
 }
 
 select {
-    border: 1px solid black;
     border-radius: 10px;
 }
 
+input, select {
+    border: 1px solid var(--border-color);
+    background-color: var(--base-color);
+    color: var(--text-color);
+}
+
 #btn-confirm {
-    color: black;
-    border: 2px solid green;
+    border: 2px solid var(--success-color);
+    color: var(--text-color);
     padding: 5px;
     border-radius: 20px;
     width: 70px;
@@ -136,14 +178,14 @@ select {
 }
 
 #btn-confirm:hover {
-    background-color: rgb(0, 180, 0);
-    color: white;
+    background-color: var(--success-color);
+    color: var(--secondary-text);
     font-weight: bold;
 }
 
 #btn-cancel {
-    color: black;
-    border: 2px solid rgb(128, 0, 0);
+    border: 2px solid var(--danger-color);
+    color: var(--text-color);
     padding: 5px;
     border-radius: 20px;
     width: 70px;
@@ -151,8 +193,8 @@ select {
 }
 
 #btn-cancel:hover {
-    background-color: rgb(180, 0, 0);
-    color: white;
+    background-color: var(--danger-color);
+    color: var(--secondary-text);
     font-weight: bold;
 
 }
@@ -198,13 +240,14 @@ select {
 }
 
 .card {
-    border: 1px solid #ccc;
     padding: 16px;
     border-radius: 8px;
-    background: #b19a9a;
     width: 200px;
     height: 300px;
-    border: 2px solid black;
+    background: var(--base-variant);
+    border: 2px solid var(--border-color);
+    color: var(--text-color);
+
 }
 
 .card h3 {
@@ -217,27 +260,27 @@ select {
 }
 
 input[type="file"] {
-    color: #444;
+    color: var(--text-color);
 }
 
 input[type="file"]::file-selector-button {
-    background: #6c63ff;
-    color: white;
+    background: var(--acent-color);
+    color: var(--secondary-text);
     border: none;
     padding: 8px 14px;
     border-radius: 6px;
     cursor: pointer;
 }
 
-.btn-edit-card{
+.btn-edit-card {
     border-radius: 9px;
-    background-color: rgb(0, 98, 190);
+    background-color: var(--info-color);
     padding: 4px;
 
 }
 
-.btn-delate-card{
+.btn-delate-card {
     border-radius: 9px;
     padding: 4px;
-    background-color: rgb(190, 0, 0);
+    background-color: var(--danger-color);
 }
