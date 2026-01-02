@@ -1,0 +1,136 @@
+:root {
+    --base-color: #ffffff;
+    --primary-color: rgb(100, 43, 100);
+    --base-variant: white;
+    --color-hover: rgb(214, 214, 214);
+    --word-variant: black;
+}
+
+.dark {
+    --base-color: #121212;
+    --primary-color: #ffffff;
+    --base-variant: grey;
+    --color-hover: rgb(153, 153, 153);
+    --word-variant: white;
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    transition: 1.1s;
+
+}
+
+
+body {
+    background-color: var(--base-color);
+}
+
+.div-main {
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+label {
+    color: var(--word-variant);
+}
+
+.div-title {
+    color: var(--word-variant);
+    text-align: center;
+    margin-bottom: 100px;
+}
+
+.div-title p {
+    font-style: italic;
+}
+
+.btn-modechange {
+    height: 50px;
+    width: 50px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: var(--base-variant);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 2px solid black;
+}
+
+.btn-modechange:hover {
+    transform: scale(1.1);
+    background-color: var(--color-hover);
+}
+
+.btn-modechange span {
+    fill: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-modechange span:last-child {
+    display: none;
+}
+
+.dark .btn-modechange span:first-child {
+    display: none;
+}
+
+.dark .btn-modechange span:last-child {
+    display: block;
+}
+
+.div-player {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 150px;
+}
+
+.div-start {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-start {
+    width: 30%;
+    margin: 20px;
+}
+
+.btn-restart {
+    width: 100px;
+}
+
+.btn-start,
+.btn-restart {
+    padding: 10px;
+    border-radius: 20px;
+    border: 2px solid black;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: bold;
+}
+
+.btn-start:hover,
+.btn-restart:hover {
+    transform: scale(1.1);
+}
+
+
+input {
+    padding: 10px;
+    border-radius: 20px;
+    border: 2px solid black;
+}
