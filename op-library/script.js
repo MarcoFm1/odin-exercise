@@ -9,35 +9,37 @@ const selectEl = document.querySelector("select");
 const inputBookName = document.querySelector("#inputBookName");
 const inputAuthorName = document.querySelector("#inputAuthorName");
 const inputPages = document.querySelector("#inputPages");
+const inputImage = document.getElementById("inputImage");
 
 const libraryCont = document.getElementById("div-library")
+
 
 //darkmode
 let darkmode = localStorage.getItem("dark");
 const btnModeChange = document.querySelector(".btn-modechange")
 
-function enableDarkMode(){
+function enableDarkMode() {
   document.body.classList.add("dark")
   localStorage.setItem("dark", "active")
 }
 
-function disableDarkMode(){
+function disableDarkMode() {
   document.body.classList.remove("dark")
   localStorage.setItem("dark", null)
 }
 
-if(darkmode === "active"){
+if (darkmode === "active") {
   enableDarkMode()
 }
 
-btnModeChange.addEventListener("click", () =>{
-    darkmode = localStorage.getItem("dark")
-    if(darkmode !== "active"){
-      enableDarkMode();
-    }
-    else{
-      disableDarkMode();
-    }
+btnModeChange.addEventListener("click", () => {
+  darkmode = localStorage.getItem("dark")
+  if (darkmode !== "active") {
+    enableDarkMode();
+  }
+  else {
+    disableDarkMode();
+  }
 })
 //==============
 
@@ -55,7 +57,7 @@ btnCancel.addEventListener("click", () => {
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
-  
+
   addBookToLibrary();
   clearForm()
 
@@ -63,14 +65,20 @@ form.addEventListener("submit", (event) => {
 });
 
 
-const myLibrary = [];
+const myLibrary = JSON.parse(localStorage.getItem("list")) || [];
+renderLibrary();
+
+function saveLibrary() {
+  localStorage.setItem("list", JSON.stringify(myLibrary));
+}
 
 //book constructor
-function Book(title, author, pages, status) {
+function Book(title, author, pages, status, image) {
   this.title = title;
   this.author = author;
   this.pages = pages;
   this.status = status;
+  this.image = image
 }
 
 function addBookToLibrary() {
@@ -78,18 +86,36 @@ function addBookToLibrary() {
   const author = inputAuthorName.value
   const pages = inputPages.value
   const status = selectEl.value
+  const file = inputImage.files[0];
 
-  const newBook = new Book(title, author, pages, status);
-  myLibrary.push(newBook);
-  console.log(myLibrary);
 
-  renderLibrary()
+  //thanks chatgpt -> see filereader
+  if (file) {
+    const reader = new FileReader();
+
+    reader.onload = function () {
+      const image = reader.result; // base64
+
+      const newBook = new Book(title, author, pages, status, image);
+      myLibrary.push(newBook);
+      saveLibrary();
+      renderLibrary();
+    };
+
+    reader.readAsDataURL(file);
+  } else {
+    const newBook = new Book(title, author, pages, status, "");
+    myLibrary.push(newBook);
+    saveLibrary();
+    renderLibrary();
+  }
 }
 
 function clearForm() {
   inputBookName.value = "";
   inputAuthorName.value = "";
   inputPages.value = "";
+  inputImage.value = "";
 }
 
 
@@ -100,28 +126,31 @@ function renderLibrary() {
     const card = document.createElement("div");
     card.classList.add("card");
 
-    if(book.title === ""){
+    if (book.title === "") {
       book.title = "(empty)"
     }
-    if(book.author === ""){
+    if (book.author === "") {
       book.author = "-"
     }
-    if(book.pages === ""){
+    if (book.pages === "") {
       book.pages = 0
     }
 
     card.innerHTML = `
       <h3 style="color:white">${book.title}</h3>
+      <div class="div-cont-img-card">
+        ${book.image ? `<img src="${book.image}" class="card-img">` : ""}
+      </div>
       <p><strong>by:</strong> ${book.author}</p>
       <p class="txt-pages"><strong>Pages:</strong> ${book.pages}</p>
-      <p class="txt-read"><strong>Read?:</strong> ${book.status}</p>
+      <p class="txt-read"><strong>Status:</strong> ${book.status}</p>
       <button data-index="${index}" class="btn-edit-card">Edit</button>
       <button data-index="${index}" class="btn-delate-card">Delete</button>
     `;
 
     libraryCont.appendChild(card);
   });
-
+  addEditEvents()
   addDeleteEvents();
 }
 
@@ -134,6 +163,7 @@ function addDeleteEvents() {
     button.addEventListener("click", () => {
       const index = button.dataset.index;
       myLibrary.splice(index, 1);
+      saveLibrary();
       renderLibrary();
     });
   });
@@ -141,12 +171,22 @@ function addDeleteEvents() {
 
 
 //edit function
-function addEditEvents(){
+function addEditEvents() {
+  const editButtons = document.querySelectorAll(".card .btn-edit-card");
 
+  editButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      const index = button.dataset.index;
+
+      if (myLibrary[index].status === "Read") {
+        myLibrary[index].status = "No Read";
+      }
+      else {
+        myLibrary[index].status = "Read";
+      }
+
+      saveLibrary();
+      renderLibrary();
+    });
+  });
 }
-
-
-
-
-
-//ver localstorage

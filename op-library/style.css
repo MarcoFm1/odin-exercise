@@ -232,14 +232,24 @@ input, select {
     }
 }
 
-#div-library {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
+.div-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    justify-items: center;
+    padding: 0 16px;
 
+}
+
+#div-library {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 40px;
+    margin-top: 20px;
+    justify-items: center;
+    align-items: center;
 }
 
 .card {
@@ -260,6 +270,20 @@ input, select {
 .card button {
     margin-top: 10px;
     width: 100%;
+}
+
+.div-cont-img-card{
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-img{
+    width: 60px;
+    height: 100px;
 }
 
 input[type="file"] {
