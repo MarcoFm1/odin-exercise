@@ -126,6 +126,7 @@ label {
 .btn-start:hover,
 .btn-restart:hover {
     transform: scale(1.1);
+    background-color: rgb(247, 247, 156);
 }
 
 
@@ -133,4 +134,121 @@ input {
     padding: 10px;
     border-radius: 20px;
     border: 2px solid black;
+    transition: 0.4s;
+
+}
+
+input:focus {
+    box-shadow: 0 4px 8px 0 rgb(131, 64, 255), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.input-hide {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+}
+
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 10px;
+}
+
+.cell {
+    background-color: var(--base-variant);
+    border: 2px solid var(--word-variant);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--word-variant);
+    transition: 0.3s;
+    border-radius: 10px;
+}
+
+.cell:hover {
+    background-color: var(--color-hover);
+}
+
+.turn-text {
+    color: var(--word-variant);
+}
+
+
+@media (max-width: 1024px) {
+    .div-player {
+        gap: 80px;
+    }
+
+    .div-title {
+        margin-bottom: 60px;
+    }
+
+    .btn-start {
+        width: 50%;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .div-main {
+        height: auto;
+        padding: 20px;
+    }
+
+    .div-player {
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    .div-title {
+        margin-bottom: 40px;
+        font-size: 0.9rem;
+    }
+
+    .btn-start {
+        width: 80%;
+    }
+
+    input {
+        width: 100%;
+    }
+
+    .btn-start,
+    .btn-restart {
+        width: 100%;
+        max-width: 250px;
+    }
+
+    .btn-modechange {
+        height: 45px;
+        width: 45px;
+        top: 15px;
+        right: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .div-title h1 {
+        font-size: 1.5rem;
+    }
+
+    .div-title p {
+        font-size: 0.9rem;
+    }
+
+    .div-player {
+        gap: 25px;
+    }
 }
