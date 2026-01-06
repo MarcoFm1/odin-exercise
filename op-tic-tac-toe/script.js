@@ -43,7 +43,7 @@ function Player(name) {
 }
 
 
-let randomElement;
+let randomPlayer;
 
 btnStart.addEventListener("click", () => {
     if (!nameOne.value || !nameTwo.value) {
@@ -60,8 +60,8 @@ btnStart.addEventListener("click", () => {
 
         const array = [playerOne.name, playerTwo.name];
 
-        randomElement = array[Math.floor(Math.random() * array.length)];
-        console.log(randomElement)
+        randomPlayer = array[Math.floor(Math.random() * array.length)];
+        console.log("Turn: ", randomPlayer)
 
         renderDashBoard()
     }
@@ -71,7 +71,7 @@ btnStart.addEventListener("click", () => {
 function renderDashBoard() {
     dashboardCont.innerHTML = `
         <div class="dashboard">
-            <h2 class="turn-text">Turno de ${randomElement}</h2>
+            <h2 class="turn-text">Turn: ${randomPlayer}</h2>
             <div class="board">
                 <div class="cell" data-index="0"></div>
                 <div class="cell" data-index="1"></div>
@@ -84,7 +84,7 @@ function renderDashBoard() {
                 <div class="cell" data-index="8"></div>
             </div>
 
-            <button class="btn-restart">Restart</button>
+            <button class="btn-restart" onclick="restartGame()">Restart</button>
         </div>
     `;
     initGame();
@@ -93,5 +93,47 @@ function renderDashBoard() {
 let currentPlayer = "X";
 
 function initGame() {
+    const cells = document.querySelectorAll(".cell") //da la lista de celdas
+    const turnText = document.querySelector(".turn-text")
+    /*cells.forEach(cell => {
+        const index = cell.dataset.index
+        console.log("cell: ", index)
+        cell.textContent = index
+    })*/
 
+    cells.forEach(cell => {
+        cell.addEventListener("click", () => {
+            if (cell.textContent !== "") return;
+
+            const currentIndex = cell.dataset.index
+            console.log("cell clicked: ", currentIndex, " | simbol: ", currentPlayer)
+
+            cell.textContent = currentPlayer;
+
+            if (currentPlayer === "X" ) {
+                currentPlayer = "O";
+                if(randomPlayer === nameOne.value){
+                    randomPlayer = nameTwo.value
+                    console.log("Turn name: ", randomPlayer)
+                    turnText.textContent = "Turn: "+ randomPlayer;
+                }
+            }
+            else {
+                currentPlayer = "X";
+                randomPlayer = nameOne.value
+                console.log("Turn name: ", randomPlayer)
+                turnText.textContent = "Turn: "+ randomPlayer;
+            }
+        });
+    });
 }
+
+function restartGame() {
+    currentPlayer = "X";
+    const cells = document.querySelectorAll(".cell") //da la lista de celdas
+
+    cells.forEach(cell => {
+        cell.textContent = "";
+    })
+}
+
