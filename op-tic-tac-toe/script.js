@@ -110,22 +110,25 @@ function initGame() {
 
             cell.textContent = currentPlayer;
 
-            if (currentPlayer === "X" ) {
+            if (currentPlayer === "X") {
                 currentPlayer = "O";
-                if(randomPlayer === nameOne.value){
+                if (randomPlayer === nameOne.value) {
                     randomPlayer = nameTwo.value
                     console.log("Turn name: ", randomPlayer)
-                    turnText.textContent = "Turn: "+ randomPlayer;
+                    turnText.textContent = "Turn: " + randomPlayer;
                 }
             }
             else {
                 currentPlayer = "X";
                 randomPlayer = nameOne.value
                 console.log("Turn name: ", randomPlayer)
-                turnText.textContent = "Turn: "+ randomPlayer;
+                turnText.textContent = "Turn: " + randomPlayer;
             }
+            logicGame()
         });
+
     });
+
 }
 
 function restartGame() {
@@ -137,3 +140,46 @@ function restartGame() {
     })
 }
 
+const winCondition = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
+
+function logicGame() {
+    const cells = document.querySelectorAll(".cell");
+
+    for (let i = 0; i < winCondition.length; i++) {
+        const a = winCondition[i][0];
+        const b = winCondition[i][1];
+        const c = winCondition[i][2];
+
+        if (cells[a].textContent !== "" && cells[a].textContent === cells[b].textContent && cells[a].textContent === cells[c].textContent) {
+            showWinner(cells[a].textContent);
+
+            return;
+        }
+    }
+
+}
+
+
+function showWinner(symbol) {
+    const winnerName =
+        symbol === "X" ? nameOne.value || "Player 1" : nameTwo.value || "Player 2";
+
+    const overlay = document.createElement("div");
+    overlay.classList.add("winner-overlay");
+
+    overlay.innerHTML = `
+        <div class="winner-box">
+            <h2>🎉 Winner 🎉</h2>
+            <span>${winnerName}</span>
+            <br><br>
+            <button class="btn-restart">Play Again</button>
+        </div>
+    `;
+
+    overlay.querySelector("button").addEventListener("click", () => {
+        overlay.remove();
+        restartGame();
+    });
+
+    document.body.appendChild(overlay);
+}
