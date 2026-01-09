@@ -32,6 +32,7 @@ btnChangeMode.addEventListener("click", () => {
 const btnStart = document.querySelector(".btn-start");
 const btnRestart = document.querySelector(".btn-restart");
 const dashboardCont = document.querySelector(".div-dashboard")
+const turnText = document.querySelector(".turn-text");
 
 const nameOne = document.getElementById("input-1");
 const nameTwo = document.getElementById("input-2");
@@ -43,7 +44,9 @@ function Player(name) {
 }
 
 
-let randomPlayer;
+let currentPlayer = "X";
+let playerX = "";
+let playerO = "";
 
 btnStart.addEventListener("click", () => {
     if (!nameOne.value || !nameTwo.value) {
@@ -90,11 +93,10 @@ function renderDashBoard() {
     initGame();
 }
 
-let currentPlayer = "X";
-
 function initGame() {
     const cells = document.querySelectorAll(".cell") //da la lista de celdas
     const turnText = document.querySelector(".turn-text")
+    turnText.textContent = "Turn: " + randomPlayer;
     /*cells.forEach(cell => {
         const index = cell.dataset.index
         console.log("cell: ", index)
@@ -105,30 +107,26 @@ function initGame() {
         cell.addEventListener("click", () => {
             if (cell.textContent !== "") return;
 
-            const currentIndex = cell.dataset.index
-            console.log("cell clicked: ", currentIndex, " | simbol: ", currentPlayer)
-
             cell.textContent = currentPlayer;
 
+            // CAMBIO DE TURNO CORRECTO
             if (currentPlayer === "X") {
                 currentPlayer = "O";
-                if (randomPlayer === nameOne.value) {
-                    randomPlayer = nameTwo.value
-                    console.log("Turn name: ", randomPlayer)
-                    turnText.textContent = "Turn: " + randomPlayer;
-                }
-            }
-            else {
+                randomPlayer = (randomPlayer === nameOne.value)
+                    ? nameTwo.value
+                    : nameOne.value;
+            } else {
                 currentPlayer = "X";
-                randomPlayer = nameOne.value
-                console.log("Turn name: ", randomPlayer)
-                turnText.textContent = "Turn: " + randomPlayer;
+                randomPlayer = (randomPlayer === nameOne.value)
+                    ? nameTwo.value
+                    : nameOne.value;
             }
-            logicGame()
+
+            turnText.textContent = "Turn: " + randomPlayer;
+            logicGame();
         });
 
     });
-
 }
 
 function restartGame() {
@@ -161,12 +159,9 @@ function logicGame() {
 
 
 function showWinner(symbol) {
-    const winnerName =
-        symbol === "X" ? nameOne.value || "Player 1" : nameTwo.value || "Player 2";
-
+    const winnerName = symbol === "X" ? nameOne.value || "Player 1" : nameTwo.value || "Player 2";
     const overlay = document.createElement("div");
     overlay.classList.add("winner-overlay");
-
     overlay.innerHTML = `
         <div class="winner-box">
             <h2>🎉 Winner 🎉</h2>
