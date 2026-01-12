@@ -157,7 +157,6 @@ function logicGame() {
 
 }
 
-
 function showWinner(symbol) {
     const winnerName = symbol === "X" ? nameOne.value || "Player 1" : nameTwo.value || "Player 2";
     const overlay = document.createElement("div");
@@ -177,4 +176,8 @@ function showWinner(symbol) {
     });
 
     document.body.appendChild(overlay);
+}
+
+function autoRestart(){
+    
 }
