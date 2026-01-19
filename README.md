@@ -1,1 +1,1 @@
-doing odin project to refresh my spirituality
+doing odin project to refresh my spirituality.
