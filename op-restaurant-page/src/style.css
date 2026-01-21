@@ -1,46 +1,211 @@
-html, body {
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&family=Inter:wght@400;600&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
     height: 100%;
     margin: 0;
-    padding: 0;
 }
 
 body {
     display: flex;
     flex-direction: column;
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: #f7f5f2;
+    color: #2c2c2c;
 }
 
 header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: antiquewhite;
+    background-color: #8c1d18;
+    color: #f5d27a;
+    padding: 20px;
+    text-align: center;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
 }
-
-#div-welcome{
-    background-color: aquamarine;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
-}
-
 
 #div-content {
-    background-color: aqua;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+#div-welcome {
+    width: 100%;
+    max-width: 800px;
+    background: linear-gradient(180deg, #fffaf2, #f2ede5);
+    border-radius: 15px;
+    padding: 40px 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+#div-welcome-text h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 3rem;
+    margin-bottom: 10px;
+    color: #8c1d18;
+}
+
+#div-welcome-text p {
+    margin: 5px 0;
+    font-size: 1.1rem;
+}
+
+#div-welcome-text i {
+    color: #6b6b6b;
 }
 
 #div-page {
-    background-color: aquamarine;
-    width: 40%;
+    width: 100%;
+    max-width: 600px;
+    padding: 30px 20px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     text-align: center;
-    flex: 1;
+}
+
+#div-page h1 {
+    font-family: 'Noto Serif SC', serif;
+    color: #8c1d18;
+    margin-bottom: 30px;
+}
+
+.menu-item {
+    border-bottom: 1px solid #eee;
+    padding: 15px 0;
+}
+
+.menu-item:last-child {
+    border-bottom: none;
+}
+
+.menu-item h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #2c2c2c;
+}
+
+.menu-item p {
+    font-size: 0.95rem;
+    color: #555;
+    margin: 5px 0;
+}
+
+.menu-item span {
+    color: #8c1d18;
+    font-weight: bold;
+}
+
+#go-menu {
+    margin-top: 20px;
+    color: #f5977a;
+    border: 1px solid #f5977a;
+    font-weight: bold;
+}
+
+#go-menu:hover {
+    background-color: #f5977a;
+    color: #8c1d18;
+    transform: scale(1.1);
 }
 
 button {
-    margin: 30px;
+    background-color: transparent;
+    color: #f5d27a;
+    border: 1px solid #f5d27a;
+    margin: 0 10px;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+button:hover {
+    background-color: #f5d27a;
+    color: #8c1d18;
+    transform: scale(1.1);
+}
+
+footer {
+    background-color: #8c1d18;
+    color: #f5d27a;
+    text-align: center;
+    padding: 15px;
+    font-size: 0.9rem;
+}
+
+footer a {
+    color: #f5d27a;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+
+    header {
+        font-size: 1.2rem;
+        padding: 15px;
+    }
+
+    button {
+        margin: 15px 5px;
+        padding: 10px 22px;
+        font-size: 1rem;
+    }
+
+    #div-welcome-text h1 {
+        font-size: 2rem;
+    }
+
+    #div-page h1 {
+        font-size: 1.8rem;
+    }
+
+    .menu-item h3 {
+        font-size: 1.05rem;
+    }
+
+    .menu-item p {
+        font-size: 0.9rem;
+    }
+
+    footer {
+        font-size: 0.8rem;
+        padding: 12px;
+    }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+
+    #div-page {
+        max-width: 80%;
+    }
+
+    #div-welcome {
+        max-width: 90%;
+    }
+}
+
+@media (min-width: 1200px) {
+
+    #div-page {
+        max-width: 650px;
+    }
+
+    #div-welcome {
+        max-width: 900px;
+    }
 }
