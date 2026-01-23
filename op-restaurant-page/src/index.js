@@ -79,9 +79,10 @@ document.addEventListener("DOMContentLoaded", () => {
             </p>
         </div>
 
+
         `
     }
-
+    //l
     buttons.forEach(btn => {
         btn.addEventListener("click", () => {
             const page = btn.textContent.trim();
