@@ -105,3 +105,5 @@ function deleteTask(taskId, taskDiv) {
 
     return { timeoutId, intervalId };
 }
+
+//hacer que puedas personalizar objetivos diarios/semanales/mensuales y se agreguen a una lista
