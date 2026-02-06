@@ -6,10 +6,43 @@ const overlay = document.querySelector(".overlay");
 const input = document.getElementById("task-input");
 const doneBtn = document.getElementById("done-btn");
 
+const messAppear = document.getElementById("h3-messages")
+const btnMission = document.getElementById("create-mission")
+
 const divTask = document.querySelector(".div-task")
 //const btnDelete = document.querySelector(".btn-delete")
 
 let tasks = []
+
+const dailyMissions = [
+  { id: 1, text: "Complete 1 task" },
+  { id: 2, text: "Complete 3 tasks" },
+  { id: 3, text: "Complete 5 tasks" },
+  { id: 4, text: "Complete all tasks for the day" },
+  { id: 5, text: "Create a new task" },
+  { id: 6, text: "Complete an important task" },
+  { id: 7, text: "Leave no pending tasks today" }
+];
+
+const weeklyMissions = [
+  { id: 1, text: "Complete 10 tasks this week" },
+  { id: 2, text: "Complete 20 tasks this week" },
+  { id: 3, text: "Use the app 5 days this week" },
+  { id: 4, text: "Complete all your tasks for 3 consecutive days" },
+  { id: 5, text: "Organize all your tasks by priority" },
+  { id: 6, text: "Create at least 10 new tasks" }
+];
+
+const monthlyMissions = [
+  { id: 1, text: "Complete 50 tasks this month" },
+  { id: 2, text: "Complete 100 tasks this month" },
+  { id: 3, text: "Use the app for 20 days this month" },
+  { id: 4, text: "Do not abandon any important task this month" },
+  { id: 5, text: "Complete all your tasks on at least 5 different days" },
+  { id: 6, text: "Maintain a 7-day consecutive streak" }
+];
+
+
 
 addTaskBtn.addEventListener("click", () => {
     createClassDiv.style.display = "flex";
