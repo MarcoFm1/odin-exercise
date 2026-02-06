@@ -108,7 +108,7 @@ function generateTask(task) {
     divTask.insertAdjacentHTML(
         "beforeend",
         `
-        <div class="task" data-id="${task.id}">
+        <div class="task" data-id="${task.id}" style="margin-bottom:8px">
             <label>
                 <input type="checkbox">
                 ${task.text}
@@ -140,3 +140,6 @@ function deleteTask(taskId, taskDiv) {
 }
 
 //hacer que puedas personalizar objetivos diarios/semanales/mensuales y se agreguen a una lista
+function handleMissions(){
+    messAppear.innerHTML = ""
+}

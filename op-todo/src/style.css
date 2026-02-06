@@ -1,9 +1,64 @@
 * {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont,
+        'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+        'Open Sans', 'Helvetica Neue', sans-serif;
+    box-sizing: border-box;
 }
 
 body {
-    background-color: antiquewhite;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(29, 29, 29);
+}
+
+.div-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.div-paper {
+    width: 500px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background:
+        repeating-linear-gradient(#fffbe6,
+            #fffbe6 28px,
+            #e6e6e6 29px);
+    border-radius: 8px;
+    border-left: 6px solid #ff6b6b;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+}
+
+#add-task-btn {
+    align-self: center;
+    margin-bottom: 15px;
+}
+
+.div-task {
+    flex-grow: 1;
+    text-align: left;
+    padding-left: 10px;
+    font-size: 27px;
+    gap: 100px;
+
+}
+
+.div-objetives {
+    margin-top: auto;
+    padding-top: 15px;
+    border-top: 2px dashed #ccc;
+    text-align: center;
 }
 
 .overlay {
@@ -23,8 +78,7 @@ body {
     z-index: 999;
 }
 
-
-.div-create-class form{
+.div-create-class form {
     display: flex;
     flex-direction: column;
     width: 300px;
@@ -32,7 +86,18 @@ body {
     border-radius: 20px;
     padding: 40px;
     gap: 10px;
-    background-color: antiquewhite
+    background-color: antiquewhite;
+}
+
+button {
+    border: 1px solid #aaa;
+    background-color: #fdfdfd;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #eee;
 }
 
 button:disabled {
@@ -43,4 +108,13 @@ button:disabled {
 .task.completed label {
     text-decoration: line-through;
     opacity: 0.6;
+}
+
+.div-scroller {
+    height: 5em;
+    line-height: 1em;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    width: 100%;
+    border: none;
 }

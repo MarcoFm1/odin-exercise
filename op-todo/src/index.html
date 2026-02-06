@@ -8,27 +8,41 @@
 </head>
 
 <body>
-    <div class="overlay"></div>
-    <h1>ANDO</h1>
-    <button id="add-task-btn">Add task</button>
-    <div class="div-task">
-    </div>
-    <div class="div-create-class">
-        <form action="">
-            <label>Task name</label>
-            <input type="text" id="task-input" placeholder="Ej: Do math homework...">
-            <button type="button" id="done-btn" disabled>Done</button>
-        </form>
-    </div>
-    <div class="div-objetives">
-        <h2>Do you want to missions?</h2>
-        <select name="select">
-            <option value="value1">Daily</option>
-            <option value="value2">Weekly</option>
-            <option value="value3">Monthly</option>
-        </select>
-        <button id="create-mission">Create</button>
-        <h3 id="h3-messages"></h3>
+    <div class="div-main">
+        <div class="div-paper">
+            <div class="overlay"></div>
+            <h1>ANDO</h1>
+            <button id="add-task-btn">Add task</button>
+            <div class="div-scroller">
+                <div class="div-task"></div>
+            </div>
+            <div class="div-create-class">
+                <form action="">
+                    <label>Task name</label>
+                    <input type="text" id="task-input" placeholder="Ej: Do math homework...">
+                    <label>For:</label>
+                    <select name="select">
+                        <option value="value1">Daily</option>
+                        <option value="value2">Weekly</option>
+                        <option value="value3">Monthly</option>
+                    </select>
+
+                    <button type="button" id="done-btn" disabled>Done</button>
+                </form>
+            </div>
+            <div class="div-objetives">
+                <h2>Create your objetives</h2>
+                <select name="select">
+                    <option value="value1">Daily</option>
+                    <option value="value2">Weekly</option>
+                    <option value="value3">Monthly</option>
+                </select>
+                <button id="create-mission">Create</button>
+                <h3 id="h3-messages"></h3>
+            </div>
+
+        </div>
+
     </div>
 
 </body>
