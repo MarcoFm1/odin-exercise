@@ -5,17 +5,18 @@ const createClassDiv = document.querySelector(".div-create-class");
 const overlay = document.querySelector(".overlay");
 const input = document.getElementById("task-input");
 const doneBtn = document.getElementById("done-btn");
-const typeInput = document.getElementById("type-input")
+const typeInput = document.getElementById("type-input");
 
+const messAppear = document.getElementById("h3-messages");
+const btnMission = document.getElementById("create-mission");
 
-const messAppear = document.getElementById("h3-messages")
-const btnMission = document.getElementById("create-mission")
+const divTask = document.querySelector(".div-task");
 
-const divTask = document.querySelector(".div-task")
-//const btnDelete = document.querySelector(".btn-delete")
+let tasks = [];
 
-let tasks = []
-
+/* =======================
+   MISSIONS (por ahora solo data)
+======================= */
 const dailyMissions = [
   { id: 1, text: "Complete 1 task" },
   { id: 2, text: "Complete 3 tasks" },
@@ -44,107 +45,134 @@ const monthlyMissions = [
   { id: 6, text: "Maintain a 7-day consecutive streak" }
 ];
 
+/*LOCAL STORAGE*/
+function saveTasks() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function loadTasks() {
+  const storedTasks = localStorage.getItem("tasks");
+  if (!storedTasks) return;
+
+  tasks = JSON.parse(storedTasks);
+
+  tasks.forEach(task => {
+    generateTask(task);
+
+    if (task.completed) {
+      const taskDiv = document.querySelector(`.task[data-id="${task.id}"]`);
+      const checkbox = taskDiv.querySelector("input[type='checkbox']");
+      checkbox.checked = true;
+      taskDiv.classList.add("completed");
+    }
+  });
+}
+
+loadTasks();
 
 
 addTaskBtn.addEventListener("click", () => {
-    createClassDiv.style.display = "flex";
-    overlay.style.display = "block";
+  createClassDiv.style.display = "flex";
+  overlay.style.display = "block";
 });
 
 input.addEventListener("input", () => {
-    doneBtn.disabled = input.value.trim() === "";
+  doneBtn.disabled = input.value.trim() === "";
 });
 
+doneBtn.addEventListener("click", () => {
+  const valueTask = input.value.trim();
+  const valueInput = typeInput.value;
 
-doneBtn.addEventListener("click", () => { 
-    const valueTask = input.value.trim() 
-    const valueInput = typeInput.value
-    if (!valueTask) return 
-    const task = { 
-        id: Date.now(), 
-        text: valueTask, 
-        type: valueInput,
-        completed: false 
-    } 
-    tasks.push(task) 
+  if (!valueTask) return;
 
-    generateTask(task) 
+  const task = {
+    id: Date.now(),
+    text: valueTask,
+    type: valueInput,
+    completed: false
+  };
 
-    createClassDiv.style.display = "none"; 
-    overlay.style.display = "none"; 
-    input.value = ""; 
-    typeInput.value = "";
-    doneBtn.disabled = true; 
+  tasks.push(task);
+  saveTasks();
+  generateTask(task);
+
+  createClassDiv.style.display = "none";
+  overlay.style.display = "none";
+  input.value = "";
+  typeInput.value = "";
+  doneBtn.disabled = true;
 });
 
 divTask.addEventListener("change", (e) => {
-    if (e.target.type !== "checkbox") return;
+  if (e.target.type !== "checkbox") return;
 
-    const taskDiv = e.target.closest(".task");
-    const taskId = Number(taskDiv.dataset.id);
+  const taskDiv = e.target.closest(".task");
+  const taskId = Number(taskDiv.dataset.id);
+  const task = tasks.find(t => t.id === taskId);
 
-    const task = tasks.find(t => t.id === taskId);
+  if (e.target.checked) {
+    task.completed = true;
+    taskDiv.classList.add("completed");
+    saveTasks();
 
-    if (e.target.checked) {
-        task.completed = true;
-        taskDiv.classList.add("completed");
+    const { timeoutId, intervalId } = deleteTask(taskId, taskDiv);
+    task.timeoutId = timeoutId;
+    task.intervalId = intervalId;
+  } else {
+    task.completed = false;
+    taskDiv.classList.remove("completed");
+    saveTasks();
 
-        const { timeoutId, intervalId } = deleteTask(taskId, taskDiv);
-        task.timeoutId = timeoutId;
-        task.intervalId = intervalId;
-    } else {
-        task.completed = false;
-        taskDiv.classList.remove("completed");
+    clearTimeout(task.timeoutId);
+    clearInterval(task.intervalId);
 
-        clearTimeout(task.timeoutId);
-        clearInterval(task.intervalId);
+    task.timeoutId = null;
+    task.intervalId = null;
 
-        task.timeoutId = null;
-        task.intervalId = null;
-
-        const timerSpan = taskDiv.querySelector(".timer");
-        timerSpan.textContent = "";
-    }
+    const timerSpan = taskDiv.querySelector(".timer");
+    timerSpan.textContent = "";
+  }
 });
 
 
-
 function generateTask(task) {
-    divTask.insertAdjacentHTML(
-        "beforeend",
-        `
-        <div class="task" data-id="${task.id}" style="margin-bottom:8px">
-            <label>
-                <input type="checkbox">
-                ${task.text}
-            </label>
-            <span class="timer"></span>
-        </div>
-        `
-    );
+  divTask.insertAdjacentHTML(
+    "beforeend",
+    `
+    <div class="task" data-id="${task.id}" style="margin-bottom:8px">
+      <label>
+        <input type="checkbox">
+        [${task.type || "task"}] ${task.text}
+      </label>
+      <span class="timer"></span>
+    </div>
+    `
+  );
 }
 
 function deleteTask(taskId, taskDiv) {
-    const timerSpan = taskDiv.querySelector(".timer");
-    let seconds = 5;
+  const timerSpan = taskDiv.querySelector(".timer");
+  let seconds = 5;
 
+  timerSpan.textContent = `(${seconds})`;
+
+  const intervalId = setInterval(() => {
+    seconds--;
     timerSpan.textContent = `(${seconds})`;
+  }, 1000);
 
-    const intervalId = setInterval(() => {
-        seconds--;
-        timerSpan.textContent = `(${seconds})`;
-    }, 1000);
+  const timeoutId = setTimeout(() => {
+    clearInterval(intervalId);
+    tasks = tasks.filter(task => task.id !== taskId);
+    saveTasks();
+    taskDiv.remove();
+  }, 5000);
 
-    const timeoutId = setTimeout(() => {
-        clearInterval(intervalId);
-        tasks = tasks.filter(task => task.id !== taskId);
-        taskDiv.remove();
-    }, 5000);
-
-    return { timeoutId, intervalId };
+  return { timeoutId, intervalId };
 }
 
-//hacer que puedas personalizar objetivos diarios/semanales/mensuales y se agreguen a una lista
-function handleMissions(){
-    messAppear.innerHTML = ""
+// placeholder para misiones personalizadas
+function handleMissions() {
+  messAppear.innerHTML = "";
 }
