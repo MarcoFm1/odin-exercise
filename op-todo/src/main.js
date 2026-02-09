@@ -5,6 +5,8 @@ const createClassDiv = document.querySelector(".div-create-class");
 const overlay = document.querySelector(".overlay");
 const input = document.getElementById("task-input");
 const doneBtn = document.getElementById("done-btn");
+const typeInput = document.getElementById("type-input")
+
 
 const messAppear = document.getElementById("h3-messages")
 const btnMission = document.getElementById("create-mission")
@@ -56,10 +58,12 @@ input.addEventListener("input", () => {
 
 doneBtn.addEventListener("click", () => { 
     const valueTask = input.value.trim() 
+    const valueInput = typeInput.value
     if (!valueTask) return 
     const task = { 
         id: Date.now(), 
         text: valueTask, 
+        type: valueInput,
         completed: false 
     } 
     tasks.push(task) 
@@ -69,6 +73,7 @@ doneBtn.addEventListener("click", () => {
     createClassDiv.style.display = "none"; 
     overlay.style.display = "none"; 
     input.value = ""; 
+    typeInput.value = "";
     doneBtn.disabled = true; 
 });
 
