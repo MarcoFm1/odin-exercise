@@ -1,17 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <title>Weather App</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather App | The Odin Project</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div>
-        <h1>Weather App</h1>
-        <input type="text" id="input-text">
-        <button id="btn-search">Search</button>
-        <h3 id="city-content"></h3>
-        <p id="id-content"></p>
+
+<body class="bg-gradient-to-br from-blue-400 to-indigo-600 dark:from-gray-900 dark:to-gray-800 min-h-screen flex items-center justify-center transition-colors duration-500">
+    <div id="weather-card" class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg p-8 rounded-3xl shadow-2xl w-90 text-center transition-all duration-500">
+        <input type="text" id="input-text" placeholder="Enter city..."class="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 mb-3 transition">
+
+        <button id="btn-search" class="w-full bg-indigo-500 text-white py-3 rounded-xl hover:bg-indigo-600 active:scale-95 transition"> Search</button>
+        <button id="btn-location" class="w-full mt-2 bg-gray-700 text-white py-3 rounded-xl hover:bg-gray-800 transition">Use My Location</button>
+
+        <div class="mt-8 space-y-3 animate-fadeIn">
+            <h3 id="city-content" class="text-lg font-semibold text-gray-700 dark:text-gray-200"></h3>
+
+            <div class="flex justify-center items-center gap-3">
+                <span id="weather-icon" class="text-4xl"></span>
+                <p id="id-content" class="text-4xl font-bold text-indigo-600 dark:text-indigo-400"></p>
+            </div>
+
+            <div id="extra-info" class="mt-4 text-sm text-white-600 dark:text-white-300"></div>
+
+            <div id="forecast" class="text-white grid grid-cols-2 gap-3 mt-6 text-sm"></div>
+            <a href="https://github.com/MarcoFm1/odin-exercise/tree/main/op-weather-app" target="_blank">Github</a>
+        </div>
+
     </div>
+
 </body>
+
 </html>
