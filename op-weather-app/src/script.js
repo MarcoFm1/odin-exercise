@@ -7,31 +7,38 @@ const content = document.getElementById("id-content");
 const cityContent = document.getElementById("city-content");
 const weatherIcon = document.getElementById("weather-icon");
 const extraInfo = document.getElementById("extra-info");
+const foretext = document.getElementById("foretext")
 const forecastDiv = document.getElementById("forecast");
 
+const card = document.getElementById("weather-card");
+
+extraInfo.style.display = "none";
+foretext.style.display = "none";
 
 function fetchWeather(location) {
     fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&key=LT7F3VN9WZJJRWVQPUFECFPMU&contentType=json`)
         .then(res => res.json())
         .then(response => {
-            content.innerHTML = `${response.currentConditions.temp} °C`;
-            cityContent.innerHTML = response.resolvedAddress;
+            const currentTemp = response.currentConditions.temp;
+            const todayMax = response.days[0].tempmax;
+            const todayMin = response.days[0].tempmin;
 
+            cityContent.innerHTML = response.resolvedAddress;
             const humidity = response.currentConditions.humidity;
             const windSpeed = response.currentConditions.windspeed;
-            const card = document.getElementById("weather-card");
+            content.innerHTML = `
+            <div class="text-center">
+                <div class="text-5xl font-bold">${currentTemp}°C</div>
+                <div class="text-sm mt-1 opacity-80">
+                    ⬆ ${todayMax}°  ⬇ ${todayMin}°
+                </div>
+            </div>`;
 
-
-            if (humidity > 70) {
-                let cant = humidity / 2
-                createRainDrops(cant);
-            }
-            if (windSpeed > 60) {
+            if (windSpeed > 50) {
                 card.classList.add("wind");
             } else {
                 stopWind();
             }
-
 
             const condition = response.currentConditions.conditions.toLowerCase();
             if (condition.includes("cloud")) {
@@ -49,26 +56,30 @@ function fetchWeather(location) {
             }
             else if (condition.includes("clear")) {
                 weatherIcon.textContent = "☀️"
-                content.style.color = "orange"
+                content.style.color = "DD7B01"
             }
             else weatherIcon.innerHTML = `<p style="color: white">🌤</p>`;
 
             extraInfo.innerHTML = `
-            <p style="color: lightblue">💧 Humidity: ${response.currentConditions.humidity}%</p>
+            <p style="color: cyan">💧 Humidity: ${response.currentConditions.humidity}%</p>
             <p style="color: aliceblue">💨 Wind: ${response.currentConditions.windspeed} km/h </p>`;
 
             forecastDiv.innerHTML = "";
             response.days.slice(0, 6).forEach(day => {
-                const date = new Date(day.datetime);
+                const date = new Date(day.datetime + "T12:00:00");
 
-                const dayName = date.toLocaleDateString("en-EN", {
-                    weekday: "long"
+                const dayName = date.toLocaleDateString("en-US", {
+                    weekday: "short"
                 });
 
                 forecastDiv.innerHTML += `
                 <div class="bg-white/40 dark:bg-gray-800/40 p-3 rounded-xl">
                     <p class="font-semibold capitalize" style="color:violet">${dayName}</p>
-                    <p>${day.temp}°C</p>
+                    <p class="font-semibold">${day.temp}°C</p>
+                    <p class="text-xs opacity-80">
+                       <span class="text-red-300">⬆ ${day.tempmax}°</span>
+                       <span class="text-blue-300 ml-2">⬇ ${day.tempmin}°</span>
+                    </p>
                     <p class="text-xs">${day.conditions}</p>
                 </div>`;
             });
@@ -82,27 +93,39 @@ function fetchWeather(location) {
                 body.className = "bg-gradient-to-br from-blue-400 to-indigo-600 min-h-screen flex items-center justify-center transition-all duration-500";
             }
 
+            checkSpecialCondition(humidity, condition);
+
         })
         .catch(() => {
-            content.innerHTML = "City not found";
+            alert("city not found")
         });
 }
 
 btnSearch.addEventListener("click", () => {
     fetchWeather(input.value.trim());
+    extraInfo.style.display = "block";
+    foretext.style.display = "block";
+
 });
 
 input.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
         btnSearch.click()
+        extraInfo.style.display = "block";
+        foretext.style.display = "block";
+
     };
 });
 
 
 btnLocation.addEventListener("click", () => {
+    input.value = "";
+    extraInfo.style.display = "block";
+    foretext.style.display = "block";
+
     navigator.geolocation.getCurrentPosition(position => {
         const coords = `${position.coords.latitude},${position.coords.longitude}`;
-        setTimeout(() => cityContent.innerHTML = "Your current location", 3000)
+        setTimeout(() => cityContent.innerHTML = "Your current location", 2000)
         fetchWeather(coords);
     });
 
@@ -120,4 +143,17 @@ function createRainDrops(cant) {
 
 function stopWind() {
     document.getElementById("weather-card").classList.remove("wind");
+}
+
+function checkSpecialCondition(humidity, condition) {
+    clearRain()
+    if (humidity > 70 || condition.includes("rain")) {
+        let cant = humidity / 2;
+        createRainDrops(cant);
+    }
+}
+
+function clearRain() {
+    const drops = document.querySelectorAll(".rain-drop");
+    drops.forEach(drop => drop.remove());
 }
