@@ -1,3 +1,10 @@
+export class Node{
+    constructor(value, nextModeMode = null){
+        this._value = value;
+        this._nextModeMode = nextModeMode; 
+    }
+}
+
 export class LinkedList{
     constructor(){
         this.head = null;
@@ -17,6 +24,7 @@ export class LinkedList{
 
         if(!this.head){
             this.head = node
+            return
         }
         else{
             current = this.head;
@@ -119,12 +127,7 @@ export class LinkedList{
     }
 }
 
-export class Node{
-    constructor(value, nextModeMode = null){
-        this._value = value;
-        this._nextModeMode = nextModeMode; 
-    }
-}
+
 
 const n1 = new Node(100);
 console.log(n1)
