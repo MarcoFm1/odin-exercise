@@ -27,10 +27,12 @@ export function renderStartScreen(onStart) {
             return;
         }
 
-        // 👇 avisamos a main.js
+        localStorage.setItem( "battleship_players", 
+            JSON.stringify({ player1: p1, player2: p2 }));
+            
+
         onStart(p1, p2);
 
-        // eliminamos esta pantalla
         container.remove();
     });
 
