@@ -1,0 +1,10 @@
+body{
+    margin: 0;
+    padding: 0;
+    background-color: rgb(9, 27, 43);
+}
+
+.grid{
+    border: 2px solid white;
+    height: 100px;
+}
