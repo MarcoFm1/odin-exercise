@@ -4,7 +4,66 @@ body{
     background-color: rgb(9, 27, 43);
 }
 
-.grid{
-    border: 2px solid white;
-    height: 100px;
+h1{
+    color: aliceblue;
+}
+
+#div-app {
+    display: flex;
+    flex-direction: row;
+}
+
+.container{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+input{
+    margin:20px;
+}
+
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-container label {
+    margin-top: 10px;
+    color: white;
+}
+
+.start-button{
+    cursor: crosshair;
+}
+
+/* start game css */
+h2{
+    color: aliceblue;
+}
+
+.game-container {
+    text-align: center;
+}
+
+.boards {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(10, 30px);
+    gap: 2px;
+}
+
+.cell {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #333;
 }

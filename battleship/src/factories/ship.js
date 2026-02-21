@@ -1,18 +1,17 @@
-import "./style.css";
 export class Ship {
-    constructor(length, isSunk) {
+    constructor(length) {
         this._length = length;
-        this._isSunk = isSunk;
+        this._hits = 0;
     }
 
     hit() {
-        this._length--;
-        if (this._length <= 0) {
+        this._hits++;
+        if (this._hits >= this._length) {
             this._isSunk = true;
         }
     }
 
     isSunk() {
-        return this._isSunk;
+        return this._hits >= this._length;
     }
 }
