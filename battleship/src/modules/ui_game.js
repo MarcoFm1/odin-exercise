@@ -3,8 +3,8 @@ import { Gameboard } from "../factories/gameboard";
 const player1Board = new Gameboard();
 const player2Board = new Gameboard();
 
-player1Board.placeShip(5, [0, 1, 2, 3, 4]);
-player2Board.placeShip(4, [22, 23, 24, 25]);
+player1Board.placeFleet();
+player2Board.placeFleet();
 
 
 export function renderGameScreen(player1, player2) {
@@ -36,11 +36,24 @@ export function renderGameScreen(player1, player2) {
     const boards = document.createElement("div");
     boards.classList.add("boards");
 
+    const startButton = document.createElement("button");
+    startButton.textContent = "Start Game";
+    startButton.classList.add("start-button");
+
+    const newGameButton = document.createElement("button");
+    newGameButton.textContent = "New Game";
+    newGameButton.classList.add("new-game-button");
+    resetGame(newGameButton);
+
     boards.append(createBoard(player1, player1Board), createBoard(player2, player2Board));
 
-    gameContainer.append(title, turnIndicator, boards);
+    gameContainer.append(title, turnIndicator, boards, startButton, newGameButton);
     app.appendChild(gameContainer);
     updateTurnIndicator(player1);
+
+    const cells = gameContainer.querySelectorAll(".cell");
+    startGame(startButton, cells);
+
 }
 
 function createBoard(playerName, gameBoard) {
@@ -56,31 +69,32 @@ function createBoard(playerName, gameBoard) {
     for (let i = 0; i < 100; i++) {
         const cell = document.createElement("div");
         cell.classList.add("cell");
-        grid.appendChild(cell);
+
+        // testing show ships on the board
+        if (gameBoard.board[i]) {
+            cell.classList.add("ship");
+        }
 
         cell.addEventListener("click", () => {
             const result = gameBoard.receiveAttack(i);
 
-            if (result === "hit" || result === "sunk") {
-                cell.style.backgroundColor = "red";
-                cell.style.pointerEvents = "none";
+            cell.classList.remove("ship");
 
-                if (result === "sunk") {
-                    console.log("ship sunk");
-                }
+            if (result === "hit" || result === "sunk") {
+                cell.classList.add("hit");
+            } else {
+                cell.classList.add("miss");
             }
-            else if (result === "miss") {
-                cell.style.backgroundColor = "grey";
-                cell.style.pointerEvents = "none";
-            }
-        })
+
+            cell.style.pointerEvents = "none";
+        });
+        grid.appendChild(cell);
     }
 
-
     board.append(label, grid);
-
     return board;
 }
+
 
 function updateTurnIndicator(playerName) {
     const turnIndicator = document.querySelector(".game-container p");
@@ -93,6 +107,26 @@ function updateTurnIndicator(playerName) {
     } else {
         turnIndicator.style.color = "green";
     }
+}
+
+function startGame(button, cells) {
+    button.addEventListener("click", () => {
+        cells.forEach(cell => {
+            cell.classList.remove("ship", "hit", "miss");
+
+            cell.style.pointerEvents = "auto";
+        });
+
+        button.style.display = "none";
+    });
+}
+
+
+function resetGame(button){
+    button.addEventListener("click", () => {
+        localStorage.removeItem("battleship_players");
+        location.reload();
+    });
 }
 
 //clear localStorage
