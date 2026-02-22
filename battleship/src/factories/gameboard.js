@@ -1,19 +1,33 @@
+import { Ship } from "./ship.js";
+
 export class Gameboard {
-    constructor(boardSize) {
-        this._boardSize = boardSize;
-        this._ships = [];
-
+    constructor(boardSize = 10) {
+        this.boardSize = boardSize;
+        this.board = Array(boardSize * boardSize).fill(null);
+        this.ships = [];
     }
-    reciveAttack(x, y) {
-        // Logic to handle receiving an attack at position (x, y)
-        // This method would check if a ship is hit and update the gameboard state accordingly
-        if (this._ships.some(ship => ship.isHit(x, y))) {
-            console.log(`Hit at (${x}, ${y})!`);
-        } else {
-            console.log(`Miss at (${x}, ${y}).`);
+    receiveAttack(position) {
+        const ship = this.board[position]
+        if (ship) {
+            ship.hit()
+            if (ship.isSunk()) {
+                return "sunk"
+            }
+            return "hit"
         }
+        return "miss"
     }
 
-    
+    placeShip(length, position) {
+        const ship = new Ship(length);
+        this.ships.push(ship);
 
+        position.forEach(pos => {
+            this.board[pos] = ship;
+        })
+    }
+
+    allShipsSunk() {
+        return this.ships.every(ship => ship.isSunk());
+    }
 }

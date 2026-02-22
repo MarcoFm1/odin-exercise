@@ -1,5 +1,4 @@
 //this file control the start screen of the game, where players can enter their names and start the game
-
 const app = document.getElementById("div-app");
 
 export function renderStartScreen(onStart) {
@@ -39,3 +38,5 @@ export function renderStartScreen(onStart) {
     container.append(title, input1, input2, button);
     app.appendChild(container);
 }
+
+
