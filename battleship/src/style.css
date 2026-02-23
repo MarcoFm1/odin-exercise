@@ -67,25 +67,39 @@ h2 {
     grid-template-columns: repeat(10, 30px);
     gap: 10px;
 }
+.grid {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.board {
+  transition: transform 0.3s ease;
+}
+
+.grid {
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+/* CELLS */
 
 .cell {
-    width: 30px;
-    height: 30px;
-    border: 1px solid #333;
-    cursor: crosshair;
-    background-color: #b3d9ff00;
-    pointer-events: none;
-
+  width: 30px;
+  height: 30px;
+  border: 1px solid #333;
+  cursor: crosshair;
+  background-color: transparent; 
+  pointer-events: none;
 }
 
 .cell.hit {
-    background-color: red;
+  background-color: red;
 }
 
 .cell.miss {
-    background-color: grey;
+  background-color: grey;
 }
 
 .cell.ship {
-    background-color: #7dafff;
+  background-color: #7dafff;
 }

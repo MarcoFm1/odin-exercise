@@ -31,44 +31,75 @@ export class Gameboard {
         return this.ships.every(ship => ship.isSunk());
     }
 
-    placeFleet() {
-    const ships = [5, 4, 3, 3, 2];
+    placeShipManual(length, startIndex, orientation) {
+        const positions = [];
 
-    ships.forEach(length => {
-        let placed = false;
+        for (let i = 0; i < length; i++) {
+            const pos =
+                orientation === "horizontal"
+                    ? startIndex + i
+                    : startIndex + i * 10;
 
-        while (!placed) {
-            const horizontal = Math.random() < 0.5;
-            const row = Math.floor(Math.random() * this.boardSize);
-            const col = Math.floor(Math.random() * this.boardSize);
-
-            const positions = [];
-
-            for (let i = 0; i < length; i++) {
-                const r = horizontal ? row : row + i;
-                const c = horizontal ? col + i : col;
-
-                if (
-                    r >= this.boardSize ||
-                    c >= this.boardSize
-                ) {
-                    break;
-                }
-
-                const index = r * this.boardSize + c;
-
-                if (this.board[index] !== null) {
-                    break;
-                }
-
-                positions.push(index);
-            }
-
-            if (positions.length === length) {
-                this.placeShip(length, positions);
-                placed = true;
-            }
+            if (this.board[pos]) return false;
+            positions.push(pos);
         }
-    });
-}
+
+        const ship = new Ship(length);
+        ship.positions = positions;
+
+        positions.forEach(pos => {
+            this.board[pos] = ship;
+        });
+
+        this._ships.push(ship);
+        return true;
+    }
+    placeFleet() {
+        const ships = [5, 4, 3, 3, 2];
+
+        ships.forEach(length => {
+            let placed = false;
+
+            while (!placed) {
+                const horizontal = Math.random() < 0.5;
+                const row = Math.floor(Math.random() * this.boardSize);
+                const col = Math.floor(Math.random() * this.boardSize);
+
+                const positions = [];
+
+                for (let i = 0; i < length; i++) {
+                    let r;
+                    let c;
+                    if (horizontal) {
+                        r = row;
+                    } else {
+                        r = row + i;
+                    }
+
+                    if (horizontal) {
+                        c = col + i;
+                    } else {
+                        c = col;
+                    }
+                    if (r >= this.boardSize || c >= this.boardSize) {
+                        break;
+                    }
+
+                    const index = r * this.boardSize + c;
+
+                    if (this.board[index] !== null) {
+                        break;
+                    }
+
+                    positions.push(index);
+                }
+
+                if (positions.length === length) {
+                    this.placeShip(length, positions);
+                    placed = true;
+                }
+            }
+        });
+    }
+
 }
