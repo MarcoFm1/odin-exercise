@@ -1,4 +1,5 @@
 //this file control the start screen of the game, where players can enter their names and start the game
+
 const app = document.getElementById("div-app");
 
 export function renderStartScreen(onStart) {
@@ -7,6 +8,9 @@ export function renderStartScreen(onStart) {
 
     const title = document.createElement("h1");
     title.textContent = "Battleship Game";
+
+    const creator = document.createElement("p");
+    creator.textContent = "by Marco";
 
     const input1 = document.createElement("input");
     input1.placeholder = "Player 1";
@@ -35,8 +39,13 @@ export function renderStartScreen(onStart) {
         container.remove();
     });
 
-    container.append(title, input1, input2, button);
+    container.append(title, creator, input1, input2, button);
     app.appendChild(container);
 }
 
 
+function shake(element) {
+    element.classList.remove("shake");
+    void element.offsetWidth; 
+    element.classList.add("shake");
+}

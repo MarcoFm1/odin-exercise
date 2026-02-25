@@ -43,6 +43,9 @@ export function renderGameScreen(player1, player2) {
     const gameContainer = document.createElement("div");
     gameContainer.classList.add("game-container");
 
+    const controls = document.createElement("div");
+    controls.classList.add("controls");
+
     const title = document.createElement("h2");
     title.textContent = `${player1} vs ${player2}`;
 
@@ -69,6 +72,10 @@ export function renderGameScreen(player1, player2) {
     newGameButton.classList.add("new-game-button");
     resetGame(newGameButton);
 
+    const sunkText = document.createElement("p");
+    sunkText.classList.add("sunk-text");
+
+
     boards.append(createBoard(player1, player1Board, 1), createBoard(player2, player2Board, 2));
 
     gameContainer.appendChild(placementText);
@@ -81,7 +88,10 @@ export function renderGameScreen(player1, player2) {
         boards.style.opacity = "1";
     }
 
-    gameContainer.append(title, turnIndicator, placementText, boards, randommizeButton, placeShipsButton, startButton, newGameButton);
+
+    controls.append(randommizeButton, placeShipsButton, startButton, newGameButton);
+
+    gameContainer.append(title, turnIndicator, sunkText, placementText, boards, controls);
 
 
     app.appendChild(gameContainer);
@@ -205,34 +215,65 @@ function switchTurn() {
 function handleAttack(cell, index, gameBoard, boardOwner) {
     if (currentPlayer === boardOwner) return;
 
-    if (cell.classList.contains("hit") || cell.classList.contains("miss")) {
-        return;
-    }
+    if (
+        cell.classList.contains("hit") ||
+        cell.classList.contains("miss") ||
+        cell.classList.contains("sunk")
+    ) return;
 
+    const ship = gameBoard.board[index];
     const result = gameBoard.receiveAttack(index);
 
     cell.classList.remove("ship");
 
-    cell.classList.add(
-        result === "hit" || result === "sunk" ? "hit" : "miss"
-    );
-
-    if (result === "hit" || result === "sunk") {
-        if (currentPlayer === 1) {
-            return updateTurnIndicator(getPlayers().player1);
-        } else {
-            return updateTurnIndicator(getPlayers().player2);
-        }
+    if (result === "miss") {
+        cell.classList.add("miss");
+        cell.style.pointerEvents = "none";
+        switchTurn();
+        return;
     }
 
-    cell.style.pointerEvents = "none";
+    if (result === "hit") {
+        cell.classList.add("hit");
+        return;
+    }
 
     if (result === "sunk") {
-        console.log("Ship sunk!");
+        paintSunkShip(gameBoard, ship);
+        showSunkText(ship.length);
+        switchTurn();
     }
-
-    switchTurn();
 }
+
+function paintSunkShip(gameBoard, ship) {
+    const boardEl = document.querySelector(
+        `.board[data-player="${gameBoard === player1Board ? 1 : 2}"]`
+    );
+
+    const cells = boardEl.querySelectorAll(".cell");
+
+    gameBoard.board.forEach((cellShip, index) => {
+        if (cellShip === ship) {
+            cells[index].classList.remove("hit");
+            cells[index].classList.add("sunk");
+        }
+    });
+}
+
+function showSunkText(length) {
+    const text = document.querySelector(".sunk-text");
+    const players = getPlayers();
+
+    const attacker =
+        currentPlayer === 1 ? players.player1 : players.player2;
+
+    text.textContent = `${attacker} sunk a ship`;
+
+    setTimeout(() => {
+        text.textContent = "";
+    }, 10000);
+}
+
 
 function getPlayers() {
     return JSON.parse(localStorage.getItem("battleship_players"));
@@ -240,7 +281,36 @@ function getPlayers() {
 
 function randomizeBoards(button) {
     button.addEventListener("click", () => {
-        location.reload();
+        setupMode = false;
+        shipIndex = 0;
+        placingPlayer = 1;
+        status = 0;
+        currentPlayer = 1;
+
+        clearBoard(player1Board);
+        clearBoard(player2Board);
+
+        player1Board.placeFleet();
+        player2Board.placeFleet();
+
+        document.querySelectorAll(".cell").forEach(cell => {
+            cell.classList.remove("ship", "hit", "miss");
+            cell.style.pointerEvents = "none";
+        });
+
+        showBothBoards();
+
+        const startButton = document.querySelector(".start-button");
+        const randommizeButton = document.querySelector(".randomize-button");
+        const placeShipsButton = document.querySelector(".place-ships-button");
+        startButton.style.display = "block";
+        randommizeButton.style.display = "none";
+        placeShipsButton.style.display = "none";
+
+        document.querySelector(".boards").style.opacity = "0.5";
+
+        updatePlacementText();
+        startButton.click();
     });
 }
 
@@ -363,7 +433,7 @@ function updatePlacementText() {
 
 
 function checkIfThereAreShipsInFleet() {
-    if(player1Board.ships.length === 0 || player2Board.ships.length === 0) {
+    if (player1Board.ships.length === 0 || player2Board.ships.length === 0) {
         return false;
     }
     return true;
