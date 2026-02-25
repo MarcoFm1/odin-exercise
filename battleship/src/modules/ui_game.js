@@ -19,7 +19,9 @@ document.addEventListener("keydown", e => {
     }
     updatePlacementText();
 });
-    
+
+const placementText = document.createElement("p");
+placementText.classList.add("placement-text");
 
 export function renderGameScreen(player1, player2) {
     //if player names dont exist, try to get them from localStorage
@@ -69,8 +71,6 @@ export function renderGameScreen(player1, player2) {
 
     boards.append(createBoard(player1, player1Board, 1), createBoard(player2, player2Board, 2));
 
-    const placementText = document.createElement("p");
-    placementText.classList.add("placement-text");
     gameContainer.appendChild(placementText);
 
     if (status === 0) {
@@ -81,7 +81,7 @@ export function renderGameScreen(player1, player2) {
         boards.style.opacity = "1";
     }
 
-    gameContainer.append(title, turnIndicator,placementText, boards, randommizeButton, placeShipsButton, startButton, newGameButton);
+    gameContainer.append(title, turnIndicator, placementText, boards, randommizeButton, placeShipsButton, startButton, newGameButton);
 
 
     app.appendChild(gameContainer);
@@ -153,7 +153,13 @@ function enableBoards() {
 }
 
 function startGame(button, cells) {
+
     button.addEventListener("click", () => {
+        if (!checkIfThereAreShipsInFleet()) {
+            alert("No ships in the fleet");
+            return;
+        }
+
         status = 1;
         cells.forEach(cell => {
             cell.classList.remove("ship", "hit", "miss");
@@ -306,10 +312,10 @@ function handlePlacementClick(startIndex) {
             enablePlacementClicks(2);
             redrawPlayerBoard(2);
             updatePlacementText();
-            if(placingPlayer === 2) {
+            if (placingPlayer === 2) {
             }
-        } 
-        
+        }
+
         else {
             setupMode = false;
             status = 1;
@@ -346,7 +352,7 @@ function clearBoard(gameBoard) {
 
 function updatePlacementText() {
     const text = document.querySelector(".placement-text");
-
+    if (!text) return;
     if (!setupMode) {
         text.textContent = "";
         return;
@@ -354,6 +360,15 @@ function updatePlacementText() {
 
     text.textContent = `Player ${placingPlayer}: place ship of size ${fleet[shipIndex]} - orientation: ${orientation.toUpperCase()} (press R to rotate)`;
 }
+
+
+function checkIfThereAreShipsInFleet() {
+    if(player1Board.ships.length === 0 || player2Board.ships.length === 0) {
+        return false;
+    }
+    return true;
+}
 //clear localStorage
 // localStorage.removeItem("battleship_players");
 // location.reload();
+
