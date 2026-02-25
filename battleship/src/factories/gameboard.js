@@ -26,34 +26,6 @@ export class Gameboard {
             this.board[pos] = ship;
         })
     }
-
-    allShipsSunk() {
-        return this.ships.every(ship => ship.isSunk());
-    }
-
-    placeShipManual(length, startIndex, orientation) {
-        const positions = [];
-
-        for (let i = 0; i < length; i++) {
-            const pos =
-                orientation === "horizontal"
-                    ? startIndex + i
-                    : startIndex + i * 10;
-
-            if (this.board[pos]) return false;
-            positions.push(pos);
-        }
-
-        const ship = new Ship(length);
-        ship.positions = positions;
-
-        positions.forEach(pos => {
-            this.board[pos] = ship;
-        });
-
-        this._ships.push(ship);
-        return true;
-    }
     placeFleet() {
         const ships = [5, 4, 3, 3, 2];
 
@@ -102,4 +74,27 @@ export class Gameboard {
         });
     }
 
+    placeShipManual(length, startIndex, orientation) {
+        const positions = [];
+
+        for (let i = 0; i < length; i++) {
+            const pos =
+                orientation === "horizontal"
+                    ? startIndex + i
+                    : startIndex + i * this.size;
+
+            if (pos >= this.board.length || this.board[pos]) return false;
+            positions.push(pos);
+        }
+
+        const ship = { length, hits: 0 };
+        this.ships.push(ship);
+
+        positions.forEach(pos => {
+            this.board[pos] = ship;
+        });
+
+        return true;
+    }
 }
+
