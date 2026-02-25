@@ -3,9 +3,7 @@ import { Gameboard } from "../factories/gameboard";
 const player1Board = new Gameboard();
 const player2Board = new Gameboard();
 
-player1Board.placeFleet();
-player2Board.placeFleet();
-
+let placingPlayer = 1;
 let currentPlayer = 1; //player 1 starts
 let status = 0; //0 = not started, 1 = ongoing, 2 = game over
 
@@ -13,6 +11,15 @@ let setupMode = false;
 let shipIndex = 0;
 const fleet = [5, 4, 3, 3, 2];
 let orientation = "horizontal";
+
+document.addEventListener("keydown", e => {
+    if (e.key.toLowerCase() === "r") {
+        orientation =
+            orientation === "horizontal" ? "vertical" : "horizontal";
+    }
+    updatePlacementText();
+});
+    
 
 export function renderGameScreen(player1, player2) {
     //if player names dont exist, try to get them from localStorage
@@ -62,6 +69,10 @@ export function renderGameScreen(player1, player2) {
 
     boards.append(createBoard(player1, player1Board, 1), createBoard(player2, player2Board, 2));
 
+    const placementText = document.createElement("p");
+    placementText.classList.add("placement-text");
+    gameContainer.appendChild(placementText);
+
     if (status === 0) {
         startButton.style.display = "block";
         boards.style.opacity = "0.5";
@@ -70,7 +81,7 @@ export function renderGameScreen(player1, player2) {
         boards.style.opacity = "1";
     }
 
-    gameContainer.append(title, turnIndicator, boards, randommizeButton, placeShipsButton, startButton, newGameButton);
+    gameContainer.append(title, turnIndicator,placementText, boards, randommizeButton, placeShipsButton, startButton, newGameButton);
 
 
     app.appendChild(gameContainer);
@@ -106,12 +117,15 @@ function createBoard(playerName, gameBoard, playerNumber) {
         }
 
         cell.addEventListener("click", () => {
-            if (setupMode && playerNumber === 1) {
+            if (setupMode && playerNumber === placingPlayer) {
                 handlePlacementClick(i);
             } else {
                 handleAttack(cell, i, gameBoard, playerNumber);
             }
-        }); grid.appendChild(cell);
+        });
+
+
+        grid.appendChild(cell);
     }
 
     board.append(label, grid);
@@ -235,16 +249,25 @@ function enterPlacementMode() {
     setupMode = true;
     status = 0;
     shipIndex = 0;
+    placingPlayer = 1;
+
+    clearBoard(player1Board);
+    clearBoard(player2Board);
 
     showOnlyPlayerBoard(1);
-    enablePlacementClicks();
+    enablePlacementClicks(1);
+    redrawPlayerBoard(1);
+    updatePlacementText();
 }
-function enablePlacementClicks() {
-    const board = document.querySelector('.board[data-player="1"]');
+
+function enablePlacementClicks(playerNumber) {
+    const board = document.querySelector(`.board[data-player="${playerNumber}"]`);
     board.querySelectorAll(".cell").forEach(cell => {
         cell.style.pointerEvents = "auto";
     });
 }
+
+
 function showOnlyPlayerBoard(playerNumber) {
     document.querySelectorAll(".board").forEach(board => {
         board.style.display =
@@ -253,12 +276,15 @@ function showOnlyPlayerBoard(playerNumber) {
 }
 
 function handlePlacementClick(startIndex) {
+    const startbutton = document.querySelector(".start-button");
+
     if (!setupMode) return;
 
-    const length = fleet[shipIndex];
+    const board =
+        placingPlayer === 1 ? player1Board : player2Board;
 
-    const placed = player1Board.placeShipManual(
-        length,
+    const placed = board.placeShipManual(
+        fleet[shipIndex],
         startIndex,
         orientation
     );
@@ -266,21 +292,41 @@ function handlePlacementClick(startIndex) {
     if (!placed) return;
 
     shipIndex++;
-    redrawPlayerBoard();
+    redrawPlayerBoard(placingPlayer);
+    updatePlacementText();
 
+    //if player 1 finished 
     if (shipIndex === fleet.length) {
-        setupMode = false;
-        alert("All ships placed! Press Start Game");
-        showBothBoards();
+        if (placingPlayer === 1) {
+            // pass to plauer 2
+            placingPlayer = 2;
+            shipIndex = 0;
+
+            showOnlyPlayerBoard(2);
+            enablePlacementClicks(2);
+            redrawPlayerBoard(2);
+            updatePlacementText();
+            if(placingPlayer === 2) {
+            }
+        } 
+        
+        else {
+            setupMode = false;
+            status = 1;
+            showBothBoards();
+            switchTurn();
+        }
     }
 }
+function redrawPlayerBoard(playerNumber) {
+    const boardEl = document.querySelector(`.board[data-player="${playerNumber}"]`);
+    const cells = boardEl.querySelectorAll(".cell");
 
-function redrawPlayerBoard() {
-    const board = document.querySelector('.board[data-player="1"]');
-    const cells = board.querySelectorAll(".cell");
+    const board =
+        playerNumber === 1 ? player1Board : player2Board;
 
     cells.forEach((cell, i) => {
-        cell.classList.toggle("ship", !!player1Board.board[i]);
+        cell.classList.toggle("ship", !!board.board[i]);
     });
 }
 
@@ -291,6 +337,22 @@ function showBothBoards() {
             cell.style.pointerEvents = "none";
         });
     });
+}
+
+function clearBoard(gameBoard) {
+    gameBoard.board.fill(null);
+    gameBoard.ships = [];
+}
+
+function updatePlacementText() {
+    const text = document.querySelector(".placement-text");
+
+    if (!setupMode) {
+        text.textContent = "";
+        return;
+    }
+
+    text.textContent = `Player ${placingPlayer}: place ship of size ${fleet[shipIndex]} - orientation: ${orientation.toUpperCase()} (press R to rotate)`;
 }
 //clear localStorage
 // localStorage.removeItem("battleship_players");

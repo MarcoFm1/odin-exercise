@@ -76,18 +76,35 @@ export class Gameboard {
 
     placeShipManual(length, startIndex, orientation) {
         const positions = [];
+        const row = Math.floor(startIndex / this.boardSize);
+        const col = startIndex % this.boardSize;
+
+        //if collision with edge
+        if (orientation === "horizontal") {
+            if (col + length > this.boardSize) {
+                alert("ship doesn't fit");
+                return false;
+            }
+        } else {
+            if (row + length > this.boardSize) return false;
+        }
 
         for (let i = 0; i < length; i++) {
             const pos =
                 orientation === "horizontal"
                     ? startIndex + i
-                    : startIndex + i * this.size;
+                    : startIndex + i * this.boardSize;
 
-            if (pos >= this.board.length || this.board[pos]) return false;
+            //if collision with another ship
+            if (this.board[pos]) {
+                alert("Collision detected at position:", pos);
+                return false
+            }
+
             positions.push(pos);
         }
 
-        const ship = { length, hits: 0 };
+        const ship = new Ship(length);
         this.ships.push(ship);
 
         positions.forEach(pos => {
