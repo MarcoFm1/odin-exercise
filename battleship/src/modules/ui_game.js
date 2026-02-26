@@ -14,6 +14,9 @@ let orientation = "horizontal";
 
 let previewCells = [];
 
+let botHitsQueue = [];
+let botTried = new Set(); // already tried cells for bot
+
 document.addEventListener("keydown", e => {
     if (e.key.toLowerCase() === "r") {
         orientation =
@@ -237,6 +240,9 @@ function resetGame(button) {
         localStorage.removeItem("battleship_players");
         location.reload();
     });
+
+    botHitsQueue = [];
+    botTried.clear();
 }
 
 function switchTurn() {
@@ -259,6 +265,10 @@ function switchTurn() {
     updateTurnIndicator(
         currentPlayer === 1 ? getPlayers().player1 : getPlayers().player2
     );
+
+
+    botOpponent();
+
 }
 
 function handleAttack(cell, index, gameBoard, boardOwner) {
@@ -288,9 +298,9 @@ function handleAttack(cell, index, gameBoard, boardOwner) {
         showSunkText(ship.length);
         switchTurn();
     }
-    botOpponent();
 
     checkGameOver();
+
 }
 
 function paintSunkShip(gameBoard, ship) {
@@ -358,6 +368,9 @@ function randomizeBoards(button) {
         updatePlacementText();
         startButton.click();
     });
+
+    botHitsQueue = [];
+    botTried.clear();
 }
 
 function placeShipsManually(button) {
@@ -507,6 +520,89 @@ function checkGameOver() {
 // localStorage.removeItem("battleship_players");
 // location.reload();
 
+function isBotGame() {
+    const players = getPlayers();
+    return players.player2.toLowerCase() === "bot";
+}
+
+function getAdjacentIndexes(index) {
+    const size = 10;
+    const row = Math.floor(index / size);
+    const col = index % size;
+
+    const adj = [];
+
+    if (row > 0) adj.push(index - size);        // up
+    if (row < size - 1) adj.push(index + size); // down
+    if (col > 0) adj.push(index - 1);           // left
+    if (col < size - 1) adj.push(index + 1);    // right
+
+    return adj;
+}
+
 function botOpponent() {
-    
+    if (!isBotGame()) return;
+    if (currentPlayer !== 2) return;
+    if (status !== 1) return;
+
+    const boardEl = document.querySelector(`.board[data-player="1"]`);
+    const cells = [...boardEl.querySelectorAll(".cell")];
+
+    let targetIndex;
+
+    while (botHitsQueue.length > 0) {
+        const candidate = botHitsQueue.shift();
+        if (!botTried.has(candidate)) {
+            targetIndex = candidate;
+            break;
+        }
+    }
+
+    if (targetIndex === undefined) {
+        const available = cells
+            .map((_, i) => i)
+            .filter(i => !botTried.has(i));
+
+        if (available.length === 0) return;
+
+        targetIndex =
+            available[Math.floor(Math.random() * available.length)];
+    }
+
+    const cell = cells[targetIndex];
+    botTried.add(targetIndex);
+
+    setTimeout(() => {
+        const ship = player1Board.board[targetIndex];
+        const result = player1Board.receiveAttack(targetIndex);
+
+        cell.classList.remove("ship");
+
+        if (result === "miss") {
+            cell.classList.add("miss");
+            switchTurn();
+            return;
+        }
+
+        if (result === "hit") {
+            cell.classList.add("hit");
+
+            const adj = getAdjacentIndexes(targetIndex);
+            adj.forEach(i => {
+                if (!botTried.has(i)) {
+                    botHitsQueue.push(i);
+                }
+            });
+
+            setTimeout(botOpponent, 500);
+            return;
+        }
+
+        if (result === "sunk") {
+            paintSunkShip(player1Board, ship);
+            showSunkText(ship.length);
+            botHitsQueue = [];
+            switchTurn();
+        }
+    }, 600);
 }
