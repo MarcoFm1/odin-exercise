@@ -1,4 +1,4 @@
-//this file control the start screen of the game, where players can enter their names and start the game
+// this file controls the start screen of the game
 
 const app = document.getElementById("div-app");
 
@@ -18,8 +18,35 @@ export function renderStartScreen(onStart) {
     const input2 = document.createElement("input");
     input2.placeholder = "Player 2";
 
+    const botWrapper = document.createElement("div");
+    botWrapper.classList.add("bot-wrapper");
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = "bot-check";
+    checkbox.classList.add("checker");
+
+    const checkBot = document.createElement("label");
+    checkBot.textContent = "Play against Bot";
+    checkBot.htmlFor = "bot-check";
+
+    botWrapper.append( checkbox, checkBot);
+
+    checkbox.addEventListener("change", () => {
+        if (checkbox.checked) {
+            input2.value = "Bot";
+            input2.disabled = true;
+            input2.classList.add("disabled");
+        } else {
+            input2.value = "";
+            input2.disabled = false;
+            input2.classList.remove("disabled");
+        }
+    });
+
     const button = document.createElement("button");
     button.textContent = "Start Game";
+    shake(button);
 
     button.addEventListener("click", () => {
         const p1 = input1.value.trim();
@@ -30,22 +57,19 @@ export function renderStartScreen(onStart) {
             return;
         }
 
-        localStorage.setItem( "battleship_players", 
-            JSON.stringify({ player1: p1, player2: p2 }));
-            
+        localStorage.setItem("battleship_players",JSON.stringify({ player1: p1, player2: p2 }));
 
         onStart(p1, p2);
-
         container.remove();
     });
 
-    container.append(title, creator, input1, input2, button);
+    container.append(title,creator,input1,input2,botWrapper,button);
+
     app.appendChild(container);
 }
 
-
 function shake(element) {
     element.classList.remove("shake");
-    void element.offsetWidth; 
+    void element.offsetWidth;
     element.classList.add("shake");
 }

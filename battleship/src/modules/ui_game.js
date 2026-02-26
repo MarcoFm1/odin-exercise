@@ -288,8 +288,9 @@ function handleAttack(cell, index, gameBoard, boardOwner) {
         showSunkText(ship.length);
         switchTurn();
     }
+    botOpponent();
 
-        checkGameOver();
+    checkGameOver();
 }
 
 function paintSunkShip(gameBoard, ship) {
@@ -506,3 +507,6 @@ function checkGameOver() {
 // localStorage.removeItem("battleship_players");
 // location.reload();
 
+function botOpponent() {
+    
+}
