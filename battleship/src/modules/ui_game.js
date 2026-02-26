@@ -12,14 +12,16 @@ let shipIndex = 0;
 const fleet = [5, 4, 3, 3, 2];
 let orientation = "horizontal";
 
+let previewCells = [];
+
 document.addEventListener("keydown", e => {
     if (e.key.toLowerCase() === "r") {
         orientation =
             orientation === "horizontal" ? "vertical" : "horizontal";
+        clearPlacementPreview();
     }
     updatePlacementText();
 });
-
 const placementText = document.createElement("p");
 placementText.classList.add("placement-text");
 
@@ -126,6 +128,16 @@ function createBoard(playerName, gameBoard, playerNumber) {
             cell.classList.add("ship");
         }
 
+        cell.addEventListener("mouseenter", () => {
+            if (setupMode && playerNumber === placingPlayer) {
+                showPlacementPreview(i);
+            }
+        });
+
+        cell.addEventListener("mouseleave", () => {
+            clearPlacementPreview();
+        });
+
         cell.addEventListener("click", () => {
             if (setupMode && playerNumber === placingPlayer) {
                 handlePlacementClick(i);
@@ -134,7 +146,6 @@ function createBoard(playerName, gameBoard, playerNumber) {
             }
         });
 
-
         grid.appendChild(cell);
     }
 
@@ -142,6 +153,47 @@ function createBoard(playerName, gameBoard, playerNumber) {
     return board;
 }
 
+function showPlacementPreview(startIndex) {
+    clearPlacementPreview();
+
+    const board = placingPlayer === 1 ? player1Board : player2Board;
+
+    const length = fleet[shipIndex];
+    const boardEl = document.querySelector(`.board[data-player="${placingPlayer}"]`);
+    const cells = boardEl.querySelectorAll(".cell");
+
+    const row = Math.floor(startIndex / board.boardSize);
+    const col = startIndex % board.boardSize;
+
+    let valid = true;
+    const positions = [];
+
+    if ((orientation === "horizontal" && col + length > board.boardSize) || (orientation === "vertical" && row + length > board.boardSize)) {
+        valid = false;
+    }
+
+    for (let i = 0; i < length; i++) {
+        const pos = orientation === "horizontal" ? startIndex + i : startIndex + i * board.boardSize;
+
+        if (board.board[pos]) valid = false;
+        positions.push(pos);
+    }
+
+    positions.forEach(pos => {
+        const cell = cells[pos];
+        if (!cell) return;
+        cell.classList.add("preview");
+        if (!valid) cell.classList.add("invalid");
+        previewCells.push(cell);
+    });
+}
+
+function clearPlacementPreview() {
+    previewCells.forEach(cell => {
+        cell.classList.remove("preview", "invalid");
+    });
+    previewCells = [];
+}
 
 function updateTurnIndicator(playerName) {
     const turnIndicator = document.querySelector(".game-container p");
@@ -163,7 +215,6 @@ function enableBoards() {
 }
 
 function startGame(button, cells) {
-
     button.addEventListener("click", () => {
         if (!checkIfThereAreShipsInFleet()) {
             alert("No ships in the fleet");
@@ -213,7 +264,7 @@ function switchTurn() {
 function handleAttack(cell, index, gameBoard, boardOwner) {
     if (currentPlayer === boardOwner) return;
 
-    if (cell.classList.contains("hit") ||cell.classList.contains("miss") ||cell.classList.contains("sunk")) return;
+    if (cell.classList.contains("hit") || cell.classList.contains("miss") || cell.classList.contains("sunk")) return;
 
     const ship = gameBoard.board[index];
     const result = gameBoard.receiveAttack(index);
@@ -237,12 +288,12 @@ function handleAttack(cell, index, gameBoard, boardOwner) {
         showSunkText(ship.length);
         switchTurn();
     }
+
+        checkGameOver();
 }
 
 function paintSunkShip(gameBoard, ship) {
-    const boardEl = document.querySelector(
-        `.board[data-player="${gameBoard === player1Board ? 1 : 2}"]`
-    );
+    const boardEl = document.querySelector(`.board[data-player="${gameBoard === player1Board ? 1 : 2}"]`);
 
     const cells = boardEl.querySelectorAll(".cell");
 
@@ -316,6 +367,8 @@ function placeShipsManually(button) {
 }
 
 function enterPlacementMode() {
+    const startButton = document.querySelector(".start-button");
+
     setupMode = true;
     status = 0;
     shipIndex = 0;
@@ -340,18 +393,14 @@ function enablePlacementClicks(playerNumber) {
 
 function showOnlyPlayerBoard(playerNumber) {
     document.querySelectorAll(".board").forEach(board => {
-        board.style.display =
-            Number(board.dataset.player) === playerNumber ? "block" : "none";
+        board.style.display = Number(board.dataset.player) === playerNumber ? "block" : "none";
     });
 }
 
 function handlePlacementClick(startIndex) {
-    const startbutton = document.querySelector(".start-button");
-
     if (!setupMode) return;
 
-    const board =
-        placingPlayer === 1 ? player1Board : player2Board;
+    const board = placingPlayer === 1 ? player1Board : player2Board;
 
     const placed = board.placeShipManual(
         fleet[shipIndex],
@@ -376,16 +425,25 @@ function handlePlacementClick(startIndex) {
             enablePlacementClicks(2);
             redrawPlayerBoard(2);
             updatePlacementText();
-            if (placingPlayer === 2) {
-            }
         }
 
         else {
             setupMode = false;
             status = 1;
-            showBothBoards();
             switchTurn();
         }
+    }
+
+    if (player1Board.ships.length >= 5 && player2Board.ships.length >= 5) {
+        const startbutton = document.querySelector(".start-button");
+        const text = document.querySelector(".placement-text");
+        const randommizeButton = document.querySelector(".randomize-button");
+        const placeShipsButton = document.querySelector(".place-ships-button");
+        randommizeButton.style.display = "none";
+        placeShipsButton.style.display = "none";
+        showBothBoards();
+        text.style.display = "none";
+        startbutton.click();
     }
 }
 function redrawPlayerBoard(playerNumber) {
@@ -432,6 +490,18 @@ function checkIfThereAreShipsInFleet() {
     }
     return true;
 }
+
+
+function checkGameOver() {
+    if (player1Board.allShipsSunk()) {
+        alert(`${getPlayers().player2} wins!`);
+        location.reload();
+    } else if (player2Board.allShipsSunk()) {
+        alert(`${getPlayers().player1} wins!`);
+        location.reload();
+    }
+}
+
 //clear localStorage
 // localStorage.removeItem("battleship_players");
 // location.reload();

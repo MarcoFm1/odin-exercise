@@ -153,6 +153,14 @@ h3 {
   animation: sink 0.6s ease forwards;
 }
 
+.cell.preview {
+  background-color: rgba(125, 175, 255, 0.6);
+}
+
+.cell.preview.invalid {
+  background-color: rgba(255, 80, 80, 0.6);
+}
+
 @keyframes sink {
   0% {
     transform: scale(1);
