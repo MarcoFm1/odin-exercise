@@ -68,7 +68,7 @@ export function renderGameScreen(player1, player2) {
     startButton.classList.add("start-button");
 
     const newGameButton = document.createElement("button");
-    newGameButton.textContent = "New Game";
+    newGameButton.textContent = "Go Title";
     newGameButton.classList.add("new-game-button");
     resetGame(newGameButton);
 
@@ -89,7 +89,7 @@ export function renderGameScreen(player1, player2) {
     }
 
 
-    controls.append(randommizeButton, placeShipsButton, startButton, newGameButton);
+    controls.append(startButton, randommizeButton, placeShipsButton, newGameButton);
 
     gameContainer.append(title, turnIndicator, sunkText, placementText, boards, controls);
 
@@ -206,20 +206,14 @@ function switchTurn() {
     });
 
     updateTurnIndicator(
-        currentPlayer === 1
-            ? getPlayers().player1
-            : getPlayers().player2
+        currentPlayer === 1 ? getPlayers().player1 : getPlayers().player2
     );
 }
 
 function handleAttack(cell, index, gameBoard, boardOwner) {
     if (currentPlayer === boardOwner) return;
 
-    if (
-        cell.classList.contains("hit") ||
-        cell.classList.contains("miss") ||
-        cell.classList.contains("sunk")
-    ) return;
+    if (cell.classList.contains("hit") ||cell.classList.contains("miss") ||cell.classList.contains("sunk")) return;
 
     const ship = gameBoard.board[index];
     const result = gameBoard.receiveAttack(index);
@@ -260,7 +254,7 @@ function paintSunkShip(gameBoard, ship) {
     });
 }
 
-function showSunkText(length) {
+function showSunkText() {
     const text = document.querySelector(".sunk-text");
     const players = getPlayers();
 
