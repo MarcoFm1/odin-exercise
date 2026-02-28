@@ -1,0 +1,1 @@
+this carpet contains all of the static assets related to your app will go. This could include images, icons, and information files for the browser.
