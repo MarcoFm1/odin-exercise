@@ -18,6 +18,15 @@ function List(props) {
   );
 }
 
+function Button({text = "Click me",color = "white",fontSize = 18}){
+  const buttonStyle = {
+    color: color,
+    fontSize : fontSize + "px"
+  }
+
+  return <button style={buttonStyle}>{text}</button>;
+}
+
 function App() {
   const animals = ["Dog"];
 
@@ -25,6 +34,10 @@ function App() {
     <div>
       <h1>Animals: </h1>
       <List animals={animals} />
+      <Button text="Dont click me" color="purple"/>
+      <Button fontSize={12}/>
+      <Button />
+
     </div>
   );
 }
