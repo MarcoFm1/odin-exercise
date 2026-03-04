@@ -17,4 +17,9 @@ If you are developing a production application, we recommend using TypeScript wi
 
 
 UI - SHADCN
+ICONS - LUCIDE
 AUTH - CLERK
+BACK - STRAPI
+DB - SQLite https://freedb.tech/
+UUID - npm install uuid
+CALLS - AXIOS
