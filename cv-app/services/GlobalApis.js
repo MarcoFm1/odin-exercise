@@ -1,7 +1,7 @@
 import axios from "axios";
-import { use } from "react";
 
 const API_KEY = import.meta.env.VITE_STRAPI_API_KEY
+
 const axiosClient =axios.create({
     baseURL : "http://localhost:1337/api/",
     headers : {
@@ -12,7 +12,9 @@ const axiosClient =axios.create({
 
 const CreateNewResume = (data)=>axiosClient.post("/user-resumes", data)
 const GetUserResumes = (userEmail)=>axiosClient.get(`/user-resumes?filters[userEmail][$eq]=${userEmail}`)
+const UpdateResumeDetail = (data)=>axiosClient.put("/user-resumes", data)
 export default {
     CreateNewResume,
-    GetUserResumes
+    GetUserResumes,
+    UpdateResumeDetail
 }
