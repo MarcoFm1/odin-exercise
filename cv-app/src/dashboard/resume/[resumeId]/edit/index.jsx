@@ -7,7 +7,7 @@ import dummy from '../../../../data/dummy';
 
 function EditResume() {
     const params = useParams();
-    const [resumeInfo, setResumeInfo] = useState()
+    const [resumeInfo, setResumeInfo] = useState(dummy)
     useEffect(() => {
         console.log(params.resumeId)
         setResumeInfo(dummy)
