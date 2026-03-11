@@ -42,7 +42,7 @@
     "email": {
       "type": "string"
     },
-    "summery": {
+    "summary": {
       "type": "text"
     }
   }

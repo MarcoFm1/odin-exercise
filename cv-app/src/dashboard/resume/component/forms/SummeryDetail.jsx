@@ -22,25 +22,20 @@ function summaryDetail({ enabledNext }) {
         }
     }, [resumeInfo])
 
-    useEffect(() => {
-        if (summary) {
-            setResumeInfo(prev => ({
-                ...prev,
-                summary: summary
-            }))
-        }
-    }, [summary, setResumeInfo])
-
     const GenerateSummaryAI = async () => {
         try {
             setLoading(true)
 
-            const prompt = `Generate a professional resume summary for: Job title: ${resumeInfo?.jobTitle}. No more than 5 lines. Respect the language of the title to construct the summary`
+            const prompt = `Generate a professional resume summary for: Job title: ${resumeInfo?.jobTitle}. No more than 5 lines.`
 
             const result = await AIChatSession(prompt)
 
             setSummary(result)
 
+            setResumeInfo(prev => ({
+                ...prev,
+                summary: result
+            }))
         } catch (error) {
             console.log(error)
             toast("AI generation failed")
@@ -48,7 +43,6 @@ function summaryDetail({ enabledNext }) {
             setLoading(false)
         }
     }
-
     const onSave = (e) => {
         e.preventDefault()
         setLoading(true)
@@ -92,9 +86,20 @@ function summaryDetail({ enabledNext }) {
                             <Sparkles /> Generate from AI
                         </Button>
                     </div>
-                    <Textarea className="mt-2" required onChange={(e) => {
-                        setSummary(e.target.value)
-                    }} value={summary} />
+                    <Textarea
+                        className="mt-2"
+                        required
+                        value={summary}
+                        onChange={(e) => {
+                            const value = e.target.value
+                            setSummary(value)
+
+                            setResumeInfo(prev => ({
+                                ...prev,
+                                summary: value
+                            }))
+                        }}
+                    />
                     <div className='mt-2 flex justify-end'>
                         <Button type="submit" disabled={loading}>
                             {loading ? <LoaderCircle className='animate-spin' /> : "Save"}
