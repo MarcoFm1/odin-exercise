@@ -3,7 +3,7 @@ import React from 'react'
 function SummaryPreview({resumeInfo}) {
   return (
     <p>
-        {resumeInfo?.summery}
+        {resumeInfo?.summary}
     </p>
   )
 }

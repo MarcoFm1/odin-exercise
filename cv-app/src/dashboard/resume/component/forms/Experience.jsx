@@ -16,29 +16,32 @@ const formField = {
     startDate: '',
     endDate: '',
     workSummery: '',
+    currentlyWorking: false,
 
 }
+
 function Experience() {
-    const [experinceList, setExperinceList] = useState([formField]);
+    const [experienceList, setExperienceList] = useState([formField]);
     const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
     const params = useParams();
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        resumeInfo?.Experience.length > 0 && setExperinceList(resumeInfo?.Experience)
-
+        if (resumeInfo?.experience?.length > 0) {
+            setExperienceList(resumeInfo.experience)
+        }
     }, [])
 
     const handleChange = (index, event) => {
-        const newEntries = experinceList.slice();
+        const newEntries = experienceList.slice();
         const { name, value } = event.target;
         newEntries[index][name] = value;
         console.log(newEntries)
-        setExperinceList(newEntries);
+        setExperienceList(newEntries);
     }
 
     const AddNewExperience = () => {
-        setExperinceList([...experinceList, {
+        setExperienceList([...experienceList, {
             title: '',
             companyName: '',
             city: '',
@@ -50,34 +53,34 @@ function Experience() {
     }
 
     const RemoveExperience = () => {
-        setExperinceList(experinceList => experinceList.slice(0, -1))
+        setExperienceList(experienceList => experienceList.slice(0, -1))
     }
 
     const handleRichTextEditor = (e, name, index) => {
-        const newEntries = experinceList.slice();
+        const newEntries = experienceList.slice();
         newEntries[index][name] = e.target.value;
 
-        setExperinceList(newEntries);
+        setExperienceList(newEntries);
     }
 
     useEffect(() => {
         setResumeInfo({
             ...resumeInfo,
-            Experience: experinceList
+            experience: experienceList
         });
 
-    }, [experinceList]);
+    }, [experienceList]);
 
 
     const onSave = () => {
         setLoading(true)
         const data = {
             data: {
-                Experience: experinceList.map(({ id, ...rest }) => rest)
+                experience: experienceList.map(({ id, ...rest }) => rest)
             }
         }
 
-        console.log(experinceList)
+        console.log(experienceList)
 
         GlobalApis.UpdateResumeDetail(params?.resumeId, data).then(res => {
             console.log(res);
@@ -94,33 +97,33 @@ function Experience() {
                 <h2 className='font-bold text-lg'>Professional Experience</h2>
                 <p>Add Your previous Job experience</p>
                 <div>
-                    {experinceList.map((item, index) => (
+                    {experienceList.map((item, index) => (
                         <div key={index}>
                             <div className='grid grid-cols-2 gap-3 border p-3 my-5 rounded-lg'>
                                 <div>
                                     <label className='text-xs'>Position Title</label>
                                     <Input name="title"
                                         onChange={(event) => handleChange(index, event)}
-                                        defaultValue={item?.title}
+                                        value={item?.title || ""}
                                     />
                                 </div>
                                 <div>
                                     <label className='text-xs'>Company Name</label>
                                     <Input name="companyName"
                                         onChange={(event) => handleChange(index, event)}
-                                        defaultValue={item?.companyName} />
+                                        value={item?.companyName || ""} />
                                 </div>
                                 <div>
                                     <label className='text-xs'>City</label>
                                     <Input name="city"
                                         onChange={(event) => handleChange(index, event)}
-                                        defaultValue={item?.city} />
+                                        value={item?.city || ""} />
                                 </div>
                                 <div>
                                     <label className='text-xs'>State</label>
                                     <Input name="state"
                                         onChange={(event) => handleChange(index, event)}
-                                        defaultValue={item?.state}
+                                        value={item?.state || ""}
                                     />
                                 </div>
                                 <div>
@@ -128,20 +131,41 @@ function Experience() {
                                     <Input type="date"
                                         name="startDate"
                                         onChange={(event) => handleChange(index, event)}
-                                        defaultValue={item?.startDate} />
+                                        value={item?.startDate || ""} />
                                 </div>
                                 <div>
                                     <label className='text-xs'>End Date</label>
-                                    <Input type="date" name="endDate"
+                                    <Input
+                                        type="date"
+                                        name="endDate"
                                         onChange={(event) => handleChange(index, event)}
-                                        defaultValue={item?.endDate}
+                                        value={item?.endDate || ""}
+                                        disabled={item?.currentlyWorking}
                                     />
+                                    <div className="flex gap-2 mt-2">
+                                        <input
+                                            type="checkbox"
+                                            checked={item?.currentlyWorking || false}
+                                            onChange={(event) => {
+                                                const newEntries = experienceList.slice();
+                                                newEntries[index].currentlyWorking = event.target.checked;
+
+                                                if (event.target.checked) {
+                                                    newEntries[index].endDate = "";
+                                                }
+
+                                                setExperienceList(newEntries);
+                                            }}
+                                        />
+                                        <label className="text-xs flex justify-end">Currently Working Here</label>
+                                    </div>
+
                                 </div>
                                 <div className='col-span-2'>
                                     {/* Work Summery  */}
                                     <RichTextEditor
                                         index={index}
-                                        defaultValue={item?.workSummery}
+                                        defaultValue={item?.workSummery || ""}
                                         onRichTextEditorChange={(event) => handleRichTextEditor(event, 'workSummery', index)} />
                                 </div>
                             </div>

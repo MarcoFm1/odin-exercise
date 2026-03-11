@@ -9,7 +9,7 @@ import { Sparkles } from 'lucide-react'
 import { toast } from "sonner";
 import { AIChatSession } from '../../../../../services/AIModel'
 
-function summaryDetail({ enabledNext }) {
+function SummaryDetail({ enabledNext }) {
     const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)
     const [summary, setSummary] = useState("")
     const [loading, setLoading] = useState(false)
@@ -111,4 +111,4 @@ function summaryDetail({ enabledNext }) {
     )
 }
 
-export default summaryDetail
+export default SummaryDetail
