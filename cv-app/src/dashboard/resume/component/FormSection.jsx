@@ -5,11 +5,14 @@ import { Button } from '../../../components/ui/button';
 import SummaryDetail from './forms/SummeryDetail';
 import Experience from './forms/Experience';
 import Education from './forms/Education';
+import Skills from './forms/Skills';
+import { Navigate, useParams } from 'react-router-dom';
 
 
 function FormSection() {
   const [activeFormIndex, setactiveFormIndex] = useState(1)
   const [enabledNext, setEnabledNext] = useState(false)
+  const {resumeId} = useParams()
   return (
     <div>
       <div className='flex justify-between items-center'>
@@ -25,7 +28,7 @@ function FormSection() {
         </div>
 
       </div>
-      {activeFormIndex==1?<PersonalDetail enabledNext={(v)=>setEnabledNext(v)}/>:activeFormIndex==2?<SummaryDetail enabledNext={(v)=>setEnabledNext(v)}/>:activeFormIndex==3?<Experience enabledNext={(v)=>setEnabledNext(v)}/>:activeFormIndex==4?<Education enabledNext={(v)=>setEnabledNext(v)}/>:null}
+      {activeFormIndex==1?<PersonalDetail enabledNext={(v)=>setEnabledNext(v)}/>:activeFormIndex==2?<SummaryDetail enabledNext={(v)=>setEnabledNext(v)}/>:activeFormIndex==3?<Experience enabledNext={(v)=>setEnabledNext(v)}/>:activeFormIndex==4?<Education enabledNext={(v)=>setEnabledNext(v)}/>:activeFormIndex==5?<Skills enabledNext={(v)=>setEnabledNext(v)}/>:activeFormIndex == 6 ? <Navigate to={`/my-resume/${resumeId}/view`} />:null}
     </div>
   )
 }
