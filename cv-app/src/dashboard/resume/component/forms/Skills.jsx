@@ -43,10 +43,7 @@ function Skills() {
 
         setLoading(true);
         const data = {
-            data: {
-                skills: skillsList.filter(skill => skill.name.trim() !== "")
-
-            }
+            skills: skillsList.filter(skill => skill.name.trim() !== "")
         }
 
         GlobalApis.UpdateResumeDetail(resumeId, data)

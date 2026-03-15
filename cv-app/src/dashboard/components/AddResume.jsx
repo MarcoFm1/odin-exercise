@@ -23,13 +23,13 @@ import { useNavigate } from 'react-router-dom'
 
 function AddResume() {
     const [openDialog, setOpenDialog] = useState(false)
-    const [resumeTitle, setResumeTitle] = useState();
+    const [resumeTitle, setResumeTitle] = useState("");
     const { user } = useUser()
     const [loading, setLoading] = useState(false)
 
-    const { getToken } = useAuth();  
+    const { getToken } = useAuth();
 
-    const navigation=useNavigate()
+    const navigation = useNavigate()
 
     const onCreate = async () => {
         setLoading(true)
@@ -38,21 +38,20 @@ function AddResume() {
         const token = await getToken();
 
         const data = {
-            data: {
-                title: resumeTitle,
-                resumeId: uuid,
-                userEmail: user?.primaryEmailAddress?.emailAddress,
-                userName: user?.fullName
-            }
+            title: resumeTitle,
+            resumeId: uuid,
+            userEmail: user?.primaryEmailAddress?.emailAddress,
+            userName: user?.fullName
+
         }
         GlobalApis.CreateNewResume(data, token)
             .then(resp => {
                 console.log(resp)
                 setLoading(false)
-                navigation("/dashboard/resume/"+resp.data.data.documentId+"/edit")
+                navigation("/dashboard/resume/" + resp.data.data.documentId + "/edit")
             })
             .catch(error => {
-                console.log(error)
+                console.log(error.response.data)
                 setLoading(false)
             })
     }

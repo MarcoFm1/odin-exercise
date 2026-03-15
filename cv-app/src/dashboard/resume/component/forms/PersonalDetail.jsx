@@ -34,11 +34,7 @@ function PersonalDetail({ enabledNext }) {
         e.preventDefault();
         setLoading(true)
 
-        const data = {
-            data: formData
-        }
-
-        GlobalApis.UpdateResumeDetail(params.resumeId, data)
+        GlobalApis.UpdateResumeDetail(params.resumeId, formData)
             .then(resp => {
                 console.log(resp);
                 enabledNext(true)

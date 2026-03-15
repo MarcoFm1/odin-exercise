@@ -48,9 +48,7 @@ function SummaryDetail({ enabledNext }) {
         setLoading(true)
 
         const data = {
-            data: {
-                summary: summary
-            }
+            summary: summary
         }
 
         GlobalApis.UpdateResumeDetail(params.resumeId, data)

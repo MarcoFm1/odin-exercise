@@ -26,6 +26,9 @@
     },
     "workSummary": {
       "type": "richtext"
+    },
+    "currentlyWorking": {
+      "type": "boolean"
     }
   },
   "config": {}

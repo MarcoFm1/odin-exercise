@@ -15,7 +15,7 @@ const formField = {
     state: '',
     startDate: '',
     endDate: '',
-    workSummery: '',
+    workSummary: '',
     currentlyWorking: false,
 
 }
@@ -48,7 +48,7 @@ function Experience() {
             state: '',
             startDate: '',
             endDate: '',
-            workSummery: '',
+            workSummary: '',
         }])
     }
 
@@ -64,33 +64,44 @@ function Experience() {
     }
 
     useEffect(() => {
-        setResumeInfo({
-            ...resumeInfo,
-            experience: experienceList
-        });
-
+        setResumeInfo(prev => ({
+            ...prev,
+            experience: [...experienceList]
+        }));
     }, [experienceList]);
 
-
-    const onSave = () => {
-        setLoading(true)
-        const data = {
-            data: {
-                experience: experienceList.map(({ id, ...rest }) => rest)
+    const formattedExperience = experienceList.map((exp) => {
+        if (exp.id) {
+            return {
+                id: exp.id,
+                ...exp
             }
         }
 
-        console.log(experienceList)
+        return {
+            ...exp
+        }
+    })
 
-        GlobalApis.UpdateResumeDetail(params?.resumeId, data).then(res => {
-            console.log(res);
-            setLoading(false);
-            toast('Details updated !')
-        }, (error) => {
-            setLoading(false);
-        })
+    const onSave = () => {
+        setLoading(true)
 
+        const data = {
+            experience: formattedExperience
+        }
+
+        GlobalApis.UpdateResumeDetail(params.resumeId, data)
+            .then(res => {
+                console.log(res)
+                setLoading(false)
+                toast("Details updated!")
+            })
+            .catch(err => {
+                console.log(err.response?.data)
+                setLoading(false)
+            })
     }
+
     return (
         <div>
             <div className='p-5 shadow-lg rounded-lg border-t-primary border-t-4 mt-10'>
@@ -165,8 +176,8 @@ function Experience() {
                                     {/* Work Summery  */}
                                     <RichTextEditor
                                         index={index}
-                                        defaultValue={item?.workSummery || ""}
-                                        onRichTextEditorChange={(event) => handleRichTextEditor(event, 'workSummery', index)} />
+                                        value={item?.workSummary || ""}
+                                        onRichTextEditorChange={(event) => handleRichTextEditor(event, 'workSummary', index)} />
                                 </div>
                             </div>
                         </div>

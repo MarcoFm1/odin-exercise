@@ -25,6 +25,7 @@ export interface ExperienceExperience extends Struct.ComponentSchema {
   attributes: {
     city: Schema.Attribute.String;
     companyName: Schema.Attribute.String;
+    currentlyWorking: Schema.Attribute.Boolean;
     endDate: Schema.Attribute.String;
     startDate: Schema.Attribute.String;
     state: Schema.Attribute.String;
