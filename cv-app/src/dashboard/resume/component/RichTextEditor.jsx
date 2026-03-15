@@ -1,19 +1,16 @@
 import { Button } from '@/components/ui/button';
 import { ResumeInfoContext } from '@/context/ResumeInfoContext';
 import { Brain, LoaderCircle } from 'lucide-react';
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { BtnBold, BtnBulletList, BtnClearFormatting, BtnItalic, BtnLink, BtnNumberedList, BtnStrikeThrough, BtnStyles, BtnUnderline, Editor, EditorProvider, HtmlButton, Separator, Toolbar } from 'react-simple-wysiwyg'
 import { toast } from 'sonner';
 import { AIChatSession } from '../../../../services/AIModel';
 
 
-
 const PROMPT = 'position titile: {positionTitle} , Depends on position title give me 5-7 bullet points for my experience in resume (Please do not add experince level and No JSON array) , give me result in HTML tags'
-function RichTextEditor({ onRichTextEditorChange, index, defaultValue }) {
-  const [value, setValue] = useState(defaultValue);
-  const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)
+function RichTextEditor({ value, onChange, index }) {
   const [loading, setLoading] = useState(false);
-
+  const { resumeInfo } = useContext(ResumeInfoContext);
 
   const GenerateSummeryFromAI = async () => {
     const title = resumeInfo?.experience?.[index]?.title;
@@ -30,11 +27,7 @@ function RichTextEditor({ onRichTextEditorChange, index, defaultValue }) {
 
       const result = await AIChatSession(prompt);
 
-      setValue(result);
-
-      onRichTextEditorChange({
-        target: { value: result }
-      });
+      onChange(result);
 
     } catch (error) {
       console.log(error);
@@ -43,45 +36,43 @@ function RichTextEditor({ onRichTextEditorChange, index, defaultValue }) {
       setLoading(false);
     }
   };
-  
+
   return (
     <div>
-      <div className='flex justify-between my-2'>
-        <label className='text-xs'>Summery</label>
-        <Button variant="outline" size="sm"
+      <div className="flex justify-between my-2">
+        <label className="text-xs">Summary</label>
+
+        <Button
+          variant="outline"
+          size="sm"
           onClick={GenerateSummeryFromAI}
           disabled={loading}
-          className="flex gap-2 border-primary text-primary">
-          {loading ?
-            <LoaderCircle className='animate-spin' /> :
+          className="flex gap-2 border-primary text-primary"
+        >
+          {loading ? (
+            <LoaderCircle className="animate-spin" />
+          ) : (
             <>
-              <Brain className='h-4 w-4' /> Generate from AI
+              <Brain className="h-4 w-4" /> Generate from AI
             </>
-          }
+          )}
         </Button>
       </div>
+
       <EditorProvider>
-        <Editor value={value} onChange={(e) => {
-          setValue(e.target.value);
-          onRichTextEditorChange(e)
-        }}>
+        <Editor
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        >
           <Toolbar>
             <BtnBold />
             <BtnItalic />
             <BtnUnderline />
-            <BtnStrikeThrough />
-            <Separator />
-            <BtnNumberedList />
             <BtnBulletList />
-            <Separator />
-            <BtnLink />
-
-
           </Toolbar>
         </Editor>
       </EditorProvider>
     </div>
-  )
+  );
 }
-
 export default RichTextEditor

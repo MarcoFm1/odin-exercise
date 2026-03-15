@@ -56,12 +56,17 @@ function Experience() {
         setExperienceList(experienceList => experienceList.slice(0, -1))
     }
 
-    const handleRichTextEditor = (e, name, index) => {
-        const newEntries = experienceList.slice();
-        newEntries[index][name] = e.target.value;
+    const handleRichTextEditor = (value, index) => {
+        const newEntries = [...experienceList];
+        newEntries[index].workSummary = value;
 
         setExperienceList(newEntries);
-    }
+
+        setResumeInfo(prev => ({
+            ...prev,
+            experience: newEntries
+        }));
+    };
 
     useEffect(() => {
         setResumeInfo(prev => ({
@@ -177,7 +182,8 @@ function Experience() {
                                     <RichTextEditor
                                         index={index}
                                         value={item?.workSummary || ""}
-                                        onRichTextEditorChange={(event) => handleRichTextEditor(event, 'workSummary', index)} />
+                                        onChange={(value) => handleRichTextEditor(value, index)}
+                                    />
                                 </div>
                             </div>
                         </div>
